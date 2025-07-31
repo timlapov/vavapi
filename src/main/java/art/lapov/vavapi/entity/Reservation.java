@@ -4,6 +4,8 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -29,4 +31,13 @@ public class Reservation {
     private LocalDateTime createdAt;
     private LocalDateTime acceptedAt;
     private LocalDateTime paidAt;
+
+    @ManyToOne
+    private User client;
+    @ManyToOne
+    private Station station;
+    @OneToOne
+    private Payment payment;
+    @OneToOne
+    private Review review;
 }
