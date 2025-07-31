@@ -82,6 +82,9 @@ erDiagram
         string first_name
         string last_name
         string phone
+        string address
+        string city
+        int postal_code
         string photo_url
         datetime created_at
         datetime updated_at
@@ -93,16 +96,16 @@ erDiagram
         string id PK
         string user_id FK
         string name
+        string description
         string address
         string city
         string postal_code
-        string country
         string photo_url
         datetime created_at
         datetime updated_at
         boolean is_deleted
-        point geo_point_SRID_4326
-        INDEX idx_location_id
+        double longitude
+        double latitude
     }
 
     STATION {
@@ -121,7 +124,7 @@ erDiagram
     PRICING_INTERVAL {
         string id PK
         string station_id FK
-        decimal hourly_price
+        integer hourly_price_in_cents
         datetime start_datetime
         datetime end_datetime
         INDEX idx_pricing_interval
