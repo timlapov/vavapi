@@ -1,18 +1,22 @@
-package art.lapov.vavapi.entity;
+package art.lapov.vavapi.model;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EntityListeners;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
 import lombok.AllArgsConstructor;
-import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -23,17 +27,23 @@ import java.util.List;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@EntityListeners(AuditingEntityListener.class)
 @Table(name = "station")
-public class Station {
+public class Station implements BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private String id;
+    @Positive
     private Long maxPowerWatt;
+    @NotNull
     private ConnectorType connectorType;
+    @NotNull
     private Boolean enabled;
     private String description;
-    LocalDateTime createdAt;
-    LocalDateTime updatedAt;
+    @CreatedDate
+    private LocalDateTime createdAt;
+    @LastModifiedDate
+    private LocalDateTime updatedAt;
     private String photoUrl;
     private Boolean deleted;
 

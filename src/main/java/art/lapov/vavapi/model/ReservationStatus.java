@@ -1,4 +1,4 @@
-package art.lapov.vavapi.entity;
+package art.lapov.vavapi.model;
 
 public enum ReservationStatus {
     CREATED, ACCEPTED, REJECTED, PAID
