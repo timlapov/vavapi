@@ -30,7 +30,7 @@ import java.util.Random;
 
 @Component
 @AllArgsConstructor
-public class DataLoader implements CommandLineRunner {
+public class DataInitializer implements CommandLineRunner {
 
     private final Faker faker;
     private final PasswordEncoder passwordEncoder;

@@ -17,8 +17,7 @@ import org.mapstruct.ReportingPolicy;
         componentModel = MappingConstants.ComponentModel.SPRING,
         unmappedTargetPolicy = ReportingPolicy.IGNORE
 )
-public class ReviewMapper {
-    public abstract class PostMapper {
+public abstract class ReviewMapper {
 //        @Mapping(target = "author", source = "authorId")
         public abstract Review map(ReviewCreateDTO dto);
 
@@ -27,6 +26,5 @@ public class ReviewMapper {
         public abstract ReviewDTO map(Review model);
 
         public abstract void update(ReviewUpdateDTO dto, @MappingTarget Review model);
-    }
-
 }
+
