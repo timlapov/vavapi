@@ -1,5 +1,9 @@
 package art.lapov.vavapi.controller;
 
+import art.lapov.vavapi.dto.LoginCredentialsDTO;
+import art.lapov.vavapi.dto.LoginResponseDTO;
+import art.lapov.vavapi.model.User;
+import art.lapov.vavapi.security.TokenPair;
 import art.lapov.vavapi.service.AuthService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
@@ -24,39 +28,36 @@ import org.springframework.web.server.ResponseStatusException;
 public class AuthController {
     private final AuthService authService;
 
-//    @PostMapping("login")
-//    public ResponseEntity<LoginResponseDTO> login(@RequestBody @Valid LoginCredentialsDTO credentials) {
-//        LoginResponseDTO responseDto = authService.login(credentials);
-//        String refreshToken = authService.generateRefreshToken(responseDto.getUser().getId());
-//        ResponseCookie refreshCookie = generateCookie(refreshToken);
-//        return ResponseEntity
-//                .ok()
-//                .header(HttpHeaders.SET_COOKIE, refreshCookie.toString())
-//                .body(responseDto);
-//    }
-//
-//
-//    @PostMapping("refresh-token")
-//    public ResponseEntity<String> refreshToken(@CookieValue(name = "refresh-token") String token) {
-//        try {
-//
-//            TokenPair tokens = authService.validateRefreshToken(token);
-//            ResponseCookie refreshCookie = generateCookie(tokens.getRefreshToken());
-//            return ResponseEntity.ok()
-//                    .header(HttpHeaders.SET_COOKIE, refreshCookie.toString())
-//                    .body(tokens.getJwt());
-//
-//        } catch (Exception e) {
-//            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Invalid refresh token");
-//        }
-//
-//    }
+    @PostMapping("login")
+    public ResponseEntity<LoginResponseDTO> login(@RequestBody @Valid LoginCredentialsDTO credentials) {
+        LoginResponseDTO responseDto = authService.login(credentials);
+        String refreshToken = authService.generateRefreshToken(responseDto.getUser().getId());
+        ResponseCookie refreshCookie = generateCookie(refreshToken);
+        return ResponseEntity
+                .ok()
+                .header(HttpHeaders.SET_COOKIE, refreshCookie.toString())
+                .body(responseDto);
+    }
 
-//    @GetMapping("/api/protected")
-//    public String protec(@AuthenticationPrincipal User user) {
-//        System.out.println("hola");
-//        return user.getEmail();
-//    }
+
+    @PostMapping("refresh-token")
+    public ResponseEntity<String> refreshToken(@CookieValue(name = "refresh-token") String token) {
+        try {
+            TokenPair tokens = authService.validateRefreshToken(token);
+            ResponseCookie refreshCookie = generateCookie(tokens.getRefreshToken());
+            return ResponseEntity.ok()
+                    .header(HttpHeaders.SET_COOKIE, refreshCookie.toString())
+                    .body(tokens.getJwt());
+        } catch (Exception e) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Invalid refresh token");
+        }
+    }
+
+    @GetMapping("protected")
+    public String protec(@AuthenticationPrincipal User user) {
+        System.out.println("hola");
+        return user.getEmail();
+    }
 
     private ResponseCookie generateCookie(String refreshToken) {
         return ResponseCookie.from("refresh-token", refreshToken)

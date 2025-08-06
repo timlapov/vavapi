@@ -91,4 +91,9 @@ public class User implements BaseEntity, UserDetails {
     public String getUsername() {
         return email;
     }
+
+    @Override
+    public boolean isEnabled() {
+        return validated;
+    }
 }

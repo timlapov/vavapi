@@ -5,6 +5,8 @@ import art.lapov.vavapi.model.User;
 import art.lapov.vavapi.repository.UserRepository;
 import art.lapov.vavapi.security.JwtUtil;
 import lombok.AllArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -21,6 +23,8 @@ public class AccountService {
     private MailService mailService;
     private PasswordEncoder passwordEncoder;
     private JwtUtil jwtUtil;
+
+    //private Logger logger = LoggerFactory.getLogger(getClass());
 
 
     public User register(User user) {
@@ -39,15 +43,21 @@ public class AccountService {
         return user;
     }
 
-//    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-//        return userRepository
-//                .findByEmail(email)
-//                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
-//    }
-
     public void activateUser(String token) {
         User user = (User)jwtUtil.validateToken(token);
         user.setValidated(true);
+        userRepository.save(user);
+    }
+
+    public void resetPassword(String email) {
+        User user = userRepository.findByEmail(email).orElseThrow();
+        String token = jwtUtil.generateToken(user, Instant.now().plus(1,ChronoUnit.HOURS));
+        mailService.sendResetPassword(user, token);
+        //logger.info("User requested password reset : "+user.getEmail());
+    }
+
+    public void updatePassword(User user, String newPassword) {
+        user.setPassword(passwordEncoder.encode(newPassword));
         userRepository.save(user);
     }
 

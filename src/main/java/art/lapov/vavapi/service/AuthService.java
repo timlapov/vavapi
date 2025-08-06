@@ -55,13 +55,11 @@ public class AuthService {
         if (refreshToken.isExpired()) {
             throw new RuntimeException("Refresh token expired");
         }
-
         User user = refreshToken.getUser();
         tokenRepository.delete(refreshToken);
         String newToken = generateRefreshToken(user.getId());
         String jwt = jwtUtil.generateToken(user);
         return new TokenPair(jwt, newToken);
-
     }
 
     @Transactional
