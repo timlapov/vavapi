@@ -4,7 +4,6 @@ import art.lapov.vavapi.model.User;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import lombok.AllArgsConstructor;
-import org.springframework.mail.MailException;
 import org.springframework.mail.MailSendException;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
@@ -19,7 +18,7 @@ class MailService {
 
     private final JavaMailSender mailSender;
     private final TemplateEngine templateEngine;
-    private final String myEmail = "lapov.art@gmail.cpm";
+    private final String myEmail = "lapov.art@gmail.com";
 
     public void sendEmailValidation(User user, String token) {
         String link = ServletUriComponentsBuilder.fromCurrentContextPath().toUriString()+"/api/account/validate/" + token;
@@ -44,21 +43,6 @@ class MailService {
         }
 
     }
-
-//    private void sendMailBase(String to, String message, String subject) {
-//        try {
-//            MimeMessage mimeMessage = mailSender.createMimeMessage();
-//            MimeMessageHelper helper = new MimeMessageHelper(mimeMessage);
-//            helper.setTo(to);
-//            helper.setFrom("springholiday@human-booster.fr");
-//            helper.setSubject(subject);
-//
-//            helper.setText(message,true); //Temporaire, email à remplacer par un JWT
-//            mailSender.send(mimeMessage);
-//        } catch (MailException | MessagingException e) {
-//            throw new RuntimeException("Unable to send mail", e);
-//        }
-//    }
 
     public void sendResetPassword(User user, String token) {
         String link = ServletUriComponentsBuilder.fromCurrentContextPath().toUriString()+"/reset-password.html?token="+token;

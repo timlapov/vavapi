@@ -1,15 +1,12 @@
 package art.lapov.vavapi.service;
 
+import art.lapov.vavapi.dto.UserDTO;
+import art.lapov.vavapi.dto.UserUpdateDTO;
 import art.lapov.vavapi.exception.UserAlreadyExistsException;
 import art.lapov.vavapi.model.User;
 import art.lapov.vavapi.repository.UserRepository;
 import art.lapov.vavapi.security.JwtUtil;
 import lombok.AllArgsConstructor;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -23,9 +20,7 @@ public class AccountService {
     private MailService mailService;
     private PasswordEncoder passwordEncoder;
     private JwtUtil jwtUtil;
-
     //private Logger logger = LoggerFactory.getLogger(getClass());
-
 
     public User register(User user) {
         if(userRepository.findByEmail(user.getEmail()).isPresent()) {
@@ -59,6 +54,24 @@ public class AccountService {
     public void updatePassword(User user, String newPassword) {
         user.setPassword(passwordEncoder.encode(newPassword));
         userRepository.save(user);
+    }
+
+    public void deleteUser(String email) {
+        User user = userRepository.findByEmail(email).orElseThrow();
+        // TODO Check that there are no active stations or pending orders
+        user.setDeleted(true);
+    }
+
+    public User updateUser(UserUpdateDTO userDto) {
+        User user = userRepository.findByEmail(userDto.getEmail()).orElseThrow();
+        user.setFirstName(userDto.getFirstName());
+        user.setLastName(userDto.getLastName());
+        user.setPhone(userDto.getPhone());
+        user.setCountry(userDto.getCountry());
+        user.setCity(userDto.getCity());
+        user.setAddress(userDto.getAddress());
+        user.setPostalCode(userDto.getPostalCode());
+        return userRepository.save(user);
     }
 
 //    @Override

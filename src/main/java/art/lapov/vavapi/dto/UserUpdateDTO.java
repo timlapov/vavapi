@@ -34,7 +34,4 @@ public class UserUpdateDTO implements Serializable {
     @Max(99999)
     @Positive
     Integer postalCode;
-    String photoUrl;
-    Boolean validated;
-    Boolean deleted;
 }

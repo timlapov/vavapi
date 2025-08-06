@@ -13,7 +13,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -28,6 +27,12 @@ import org.springframework.web.server.ResponseStatusException;
 public class AuthController {
     private final AuthService authService;
 
+    /**
+     * Handles user login.
+     *
+     * @param credentials The login credentials.
+     * @return A response entity containing the login response DTO and a refresh token cookie.
+     */
     @PostMapping("login")
     public ResponseEntity<LoginResponseDTO> login(@RequestBody @Valid LoginCredentialsDTO credentials) {
         LoginResponseDTO responseDto = authService.login(credentials);
@@ -40,6 +45,12 @@ public class AuthController {
     }
 
 
+    /**
+     * Refreshes the access token.
+     *
+     * @param token The refresh token.
+     * @return A response entity containing the new access token.
+     */
     @PostMapping("refresh-token")
     public ResponseEntity<String> refreshToken(@CookieValue(name = "refresh-token") String token) {
         try {
@@ -53,12 +64,24 @@ public class AuthController {
         }
     }
 
+    /**
+     * A protected endpoint for testing authentication.
+     *
+     * @param user The authenticated user.
+     * @return The user's email.
+     */
     @GetMapping("protected")
     public String protec(@AuthenticationPrincipal User user) {
         System.out.println("hola");
         return user.getEmail();
     }
 
+    /**
+     * Generates a refresh token cookie.
+     *
+     * @param refreshToken The refresh token.
+     * @return The response cookie.
+     */
     private ResponseCookie generateCookie(String refreshToken) {
         return ResponseCookie.from("refresh-token", refreshToken)
                 .httpOnly(true)
