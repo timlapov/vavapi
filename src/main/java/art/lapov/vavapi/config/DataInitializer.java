@@ -102,6 +102,7 @@ public class DataInitializer implements CommandLineRunner {
                 station.setConnectorType(ConnectorType.TYPE2S);
                 station.setEnabled(true);
                 station.setDescription(faker.lorem().sentence());
+                station.setLocation(locations.get(faker.random().nextInt(locations.size())));
                 stations.add(station);
             }
             stationRepository.saveAll(stations);

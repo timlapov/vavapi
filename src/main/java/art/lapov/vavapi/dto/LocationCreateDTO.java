@@ -30,5 +30,4 @@ public class LocationCreateDTO implements Serializable {
     String country;
     Double latitude;
     Double longitude;
-    String ownerId;
 }

@@ -3,6 +3,7 @@ package art.lapov.vavapi.security;
 import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -13,6 +14,7 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
 @AllArgsConstructor
@@ -22,14 +24,24 @@ public class SecurityConfig {
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationConfiguration authenticationConfiguration;
     private final JwtUtil jwtUtil;
+    private final JwtFilter jwtFilter;
 
     @Bean
     SecurityFilterChain securityFilter(HttpSecurity http) throws Exception {
         http.csrf(AbstractHttpConfigurer::disable);
         http.authorizeHttpRequests(request -> request
+                // STATIONS:
+                .requestMatchers(HttpMethod.POST, "/api/stations").authenticated()
+                .requestMatchers(HttpMethod.PUT, "/api/stations/**").authenticated()
+                .requestMatchers(HttpMethod.DELETE, "/api/stations/**").authenticated()
+                // LOCATIONS:
+                .requestMatchers(HttpMethod.POST, "/api/locations").authenticated()
+                .requestMatchers(HttpMethod.PUT, "/api/locations/**").authenticated()
+                .requestMatchers(HttpMethod.DELETE, "/api/locations/**").authenticated()
+                // ACCOUNT:
                 .anyRequest().permitAll());
         http.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
-
+        http.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }
 

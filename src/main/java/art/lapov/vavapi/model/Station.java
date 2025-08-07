@@ -6,6 +6,7 @@ import jakarta.persistence.EntityListeners;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
@@ -51,4 +52,7 @@ public class Station implements BaseEntity {
     private List<Reservation> reservations =  new ArrayList<>();
     @OneToMany(mappedBy = "station", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<PricingInterval> pricingIntervals = new ArrayList<>();
+
+    @ManyToOne
+    private Location location;
 }
