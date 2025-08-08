@@ -15,5 +15,5 @@ public class UserShortDTO implements Serializable {
     String firstName;
     @NotBlank
     String lastName;
-    String photoUrl;
+    String miniAvatarUrl;
 }

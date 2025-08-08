@@ -119,4 +119,9 @@ class AccountController {
         return "Password updated";
     }
 
+    @GetMapping("/me")
+    public UserDTO getMe(@AuthenticationPrincipal User user) {
+        return userMapper.map(user);
+    }
+
 }

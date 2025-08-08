@@ -1,5 +1,6 @@
 package art.lapov.vavapi.security;
 
+import art.lapov.vavapi.utils.JwtUtil;
 import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

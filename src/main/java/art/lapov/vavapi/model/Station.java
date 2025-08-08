@@ -1,5 +1,6 @@
 package art.lapov.vavapi.model;
 
+import art.lapov.vavapi.utils.UrlUtil;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EntityListeners;
@@ -9,6 +10,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import jakarta.persistence.Transient;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import lombok.AllArgsConstructor;
@@ -55,4 +57,14 @@ public class Station implements BaseEntity {
 
     @ManyToOne
     private Location location;
+
+    @Transient
+    public String getFullPhotoUrl() {
+        return UrlUtil.buildImageUrl(photoUrl, "stations", false);
+    }
+
+    @Transient
+    public String getMiniPhotoUrl() {
+        return UrlUtil.buildImageUrl(photoUrl, "stations", true);
+    }
 }

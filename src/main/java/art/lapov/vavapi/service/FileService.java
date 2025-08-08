@@ -84,6 +84,7 @@ public class FileService {
         }
     }
 
+    //TODO
     private void deleteExistingImage(String entityId, FileType fileType) {
         try {
             Path dirPath = Paths.get(uploadDir, fileType.getFolderName());
@@ -99,6 +100,7 @@ public class FileService {
         } catch (IOException ignored) {}
     }
 
+    //TODO
     public void deleteImage(String fileName, FileType fileType) {
         try {
             Path dirPath = Paths.get(uploadDir, fileType.getFolderName());

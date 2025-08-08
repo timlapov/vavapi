@@ -1,5 +1,6 @@
 package art.lapov.vavapi.model;
 
+import art.lapov.vavapi.utils.UrlUtil;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -9,6 +10,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import jakarta.persistence.Transient;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
@@ -95,5 +97,20 @@ public class User implements BaseEntity, UserDetails {
     @Override
     public boolean isEnabled() {
         return validated;
+    }
+
+    @Transient
+    public String getFullAvatarUrl() {
+        return UrlUtil.buildImageUrl(photoUrl, "avatars", false);
+    }
+
+    @Transient
+    public String getMiniAvatarUrl() {
+        return UrlUtil.buildImageUrl(photoUrl, "avatars", true);
+    }
+
+    @Transient
+    public String getFullName() {
+        return firstName + " " + lastName;
     }
 }

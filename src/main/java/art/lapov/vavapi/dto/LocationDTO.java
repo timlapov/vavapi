@@ -29,7 +29,8 @@ public class LocationDTO implements Serializable {
     Integer postalCode;
     @NotBlank
     String country;
-    String photoUrl;
+    String fullPhotoUrl;
+    String miniPhotoUrl;
     Double latitude;
     Double longitude;
     UserShortDTO owner;

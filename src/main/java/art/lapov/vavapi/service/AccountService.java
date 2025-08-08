@@ -4,7 +4,7 @@ import art.lapov.vavapi.dto.UserUpdateDTO;
 import art.lapov.vavapi.exception.UserAlreadyExistsException;
 import art.lapov.vavapi.model.User;
 import art.lapov.vavapi.repository.UserRepository;
-import art.lapov.vavapi.security.JwtUtil;
+import art.lapov.vavapi.utils.JwtUtil;
 import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

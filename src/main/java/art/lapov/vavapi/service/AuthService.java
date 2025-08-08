@@ -7,7 +7,7 @@ import art.lapov.vavapi.model.RefreshToken;
 import art.lapov.vavapi.model.User;
 import art.lapov.vavapi.repository.RefreshTokenRepository;
 import art.lapov.vavapi.repository.UserRepository;
-import art.lapov.vavapi.security.JwtUtil;
+import art.lapov.vavapi.utils.JwtUtil;
 import art.lapov.vavapi.security.TokenPair;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;

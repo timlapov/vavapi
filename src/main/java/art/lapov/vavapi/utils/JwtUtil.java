@@ -1,5 +1,6 @@
-package art.lapov.vavapi.security;
+package art.lapov.vavapi.utils;
 
+import art.lapov.vavapi.security.KeyManager;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.interfaces.DecodedJWT;

@@ -19,10 +19,7 @@ public class UserDTO implements Serializable {
     String role;
     @Email
     String email;
-    @NotBlank
-    String firstName;
-    @NotBlank
-    String lastName;
+    String fullName;
     @NotBlank
     String phone;
     @NotBlank
@@ -37,6 +34,8 @@ public class UserDTO implements Serializable {
     @Positive
     Integer postalCode;
     String photoUrl;
+    String fullAvatarUrl;
+    String miniAvatarUrl;
     Boolean validated;
     Boolean deleted;
 }

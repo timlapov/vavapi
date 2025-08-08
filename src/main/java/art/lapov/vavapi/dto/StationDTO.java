@@ -20,5 +20,6 @@ public class StationDTO implements Serializable {
     ConnectorType connectorType;
     String description;
     LocalDateTime createdAt;
-    String photoUrl;
+    String fullPhotoUrl;
+    String miniPhotoUrl;
 }
