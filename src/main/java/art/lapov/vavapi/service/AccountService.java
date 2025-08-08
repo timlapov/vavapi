@@ -84,4 +84,12 @@ public class AccountService {
         return updatedUser;
     }
 
+    public void updateAvatar(String userId, String fileName) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+        user.setPhotoUrl(fileName);
+        userRepository.save(user);
+    }
+
+
 }

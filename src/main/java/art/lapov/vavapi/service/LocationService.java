@@ -18,7 +18,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
@@ -77,4 +76,18 @@ public class LocationService {
                 .map(stationMapper::map)
                 .toList();
     }
+
+    public void updatePhoto(String locationId, String fileName) {
+        Location location = locationRepository.findById(locationId)
+                .orElseThrow(() -> new RuntimeException("Локация не найдена"));
+        location.setPhotoUrl(fileName);
+        locationRepository.save(location);
+    }
+
+    public boolean isOwner(String locationId, String userId) {
+        return locationRepository.findById(locationId)
+                .map(location -> location.getOwner().getId().equals(userId))
+                .orElse(false);
+    }
+
 }
