@@ -2,6 +2,8 @@ package art.lapov.vavapi.model;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.EntityListeners;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -30,6 +32,7 @@ public class Reservation implements BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private String id;
+    @Enumerated(EnumType.STRING)
     @NotNull
     private ReservationStatus status;
     private LocalDateTime startDate;

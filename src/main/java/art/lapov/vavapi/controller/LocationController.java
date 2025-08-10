@@ -42,7 +42,6 @@ public class LocationController {
             page = 1;
         }
         Pageable pageable = PageRequest.of(page - 1, size);
-
         return locationService.findAll(pageable);
     }
 
@@ -55,7 +54,6 @@ public class LocationController {
     @ResponseStatus(HttpStatus.CREATED)
     public LocationDTO create(@RequestBody @Valid LocationCreateDTO dto,
                               @AuthenticationPrincipal User user) {
-
         return locationService.create(dto, user);
     }
 
@@ -63,8 +61,7 @@ public class LocationController {
     public LocationDTO update(@PathVariable String id,
                               @RequestBody @Valid LocationUpdateDTO dto,
                               @AuthenticationPrincipal User user) {
-        LocationDTO existingLocation = locationService.findById(id);
-        if (!existingLocation.getOwner().getId().equals(user.getId())) {
+       if (!locationService.isOwner(id, user.getId())) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "You can only update your own locations");
         }
         return locationService.update(id, dto);
@@ -74,8 +71,7 @@ public class LocationController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable String id,
                        @AuthenticationPrincipal User user) {
-        LocationDTO existingLocation = locationService.findById(id);
-        if (!existingLocation.getOwner().getId().equals(user.getId())) {
+        if (!locationService.isOwner(id, user.getId())) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "You can only delete your own locations");
         }
         locationService.delete(id);

@@ -4,6 +4,8 @@ import art.lapov.vavapi.utils.UrlUtil;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EntityListeners;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -39,6 +41,7 @@ public class Station implements BaseEntity {
     @Positive
     private Long maxPowerWatt;
     @NotNull
+    @Enumerated(EnumType.STRING)
     private ConnectorType connectorType;
     @NotNull
     private Boolean enabled;
@@ -49,6 +52,8 @@ public class Station implements BaseEntity {
     private LocalDateTime updatedAt;
     private String photoUrl;
     private Boolean deleted;
+    private Double averageRating = 0.0;
+    private Integer totalReviews = 0;
 
     @OneToMany(mappedBy = "station", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Reservation> reservations =  new ArrayList<>();

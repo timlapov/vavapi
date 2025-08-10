@@ -7,6 +7,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
@@ -39,4 +40,16 @@ public class Review implements BaseEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     private User author;
+
+    @OneToOne(fetch = FetchType.LAZY)
+    private Reservation reservation;
+
+    public Station getStation() {
+        return reservation != null ? reservation.getStation() : null;
+    }
+
+    public User getStationOwner() {
+        return reservation != null && reservation.getStation() != null
+                ? reservation.getStation().getLocation().getOwner() : null;
+    }
 }

@@ -57,7 +57,6 @@ public class StationService {
     public StationDTO update(String id, StationUpdateDTO dto) {
         Station station = stationRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Station not found with id: " + id));
-
         stationMapper.update(dto, station);
         Station updatedStation = stationRepository.save(station);
         return stationMapper.map(updatedStation);
@@ -66,7 +65,7 @@ public class StationService {
     public void delete(String id) {
         Station station = stationRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Station not found with id: " + id));
-
+        //TODO: check if station is used in reservations
         // Soft delete
         station.setDeleted(true);
         station.setEnabled(false);

@@ -56,6 +56,7 @@ public class LocationService {
     public void delete(String id) {
         Location location = locationRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Location not found with id: " + id));
+        // TODO: check if location has stations
         location.setDeleted(true);
         locationRepository.save(location);
     }
@@ -79,7 +80,7 @@ public class LocationService {
 
     public void updatePhoto(String locationId, String fileName) {
         Location location = locationRepository.findById(locationId)
-                .orElseThrow(() -> new RuntimeException("Локация не найдена"));
+                .orElseThrow(() -> new RuntimeException("Location not found with id: " + locationId));
         location.setPhotoUrl(fileName);
         locationRepository.save(location);
     }

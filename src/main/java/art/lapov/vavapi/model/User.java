@@ -76,6 +76,8 @@ public class User implements BaseEntity, UserDetails {
     private LocalDateTime updatedAt;
     private Boolean validated;
     private Boolean deleted;
+    private Double averageRating = 0.0;
+    private Integer totalReviews = 0;
 
     @OneToMany(mappedBy = "author", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Review> reviews = new ArrayList<>();

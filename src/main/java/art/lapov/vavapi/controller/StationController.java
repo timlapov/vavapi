@@ -50,10 +50,8 @@ public class StationController {
     public StationDTO update(@PathVariable String id,
                              @RequestBody @Valid StationUpdateDTO dto,
                              @AuthenticationPrincipal User user) {
-        StationDTO existingStation = stationService.findById(id);
         if (!stationService.isOwner(id, user.getId())) {
-            throw new ResponseStatusException(HttpStatus.FORBIDDEN,
-                    "You can only update your own stations");
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "You can only update your own stations");
         }
         return stationService.update(id, dto);
     }
@@ -61,10 +59,8 @@ public class StationController {
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable String id, @AuthenticationPrincipal User user) {
-        StationDTO existingStation = stationService.findById(id);
         if (!stationService.isOwner(id, user.getId())) {
-            throw new ResponseStatusException(HttpStatus.FORBIDDEN,
-                    "You can only delete your own stations");
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "You can only delete your own stations");
         }
         stationService.delete(id);
     }
