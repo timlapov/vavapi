@@ -39,31 +39,19 @@ public class SecurityConfig {
                 .requestMatchers(HttpMethod.POST, "/api/locations").authenticated()
                 .requestMatchers(HttpMethod.PUT, "/api/locations/**").authenticated()
                 .requestMatchers(HttpMethod.DELETE, "/api/locations/**").authenticated()
-                // ACCOUNT:
+                // PRICING INTERVALS:
+                .requestMatchers(HttpMethod.GET, "/api/pricing-intervals/station/**").permitAll()
+                .requestMatchers(HttpMethod.GET, "/api/pricing-intervals/calculate-cost").permitAll()
+                .requestMatchers(HttpMethod.GET, "/api/pricing-intervals/check-availability").permitAll()
+                .requestMatchers(HttpMethod.POST, "/api/pricing-intervals").authenticated()
+                .requestMatchers(HttpMethod.PUT, "/api/pricing-intervals/**").authenticated()
+                .requestMatchers(HttpMethod.DELETE, "/api/pricing-intervals/**").authenticated()
+                //
                 .anyRequest().permitAll());
         http.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
         http.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }
-
-//    @Bean
-//    SecurityFilterChain accessControl(HttpSecurity http) throws Exception {
-//        //On désactive le csrf car ce serveur est stateless, il n'a pas de session et n'est donc pas vulnérable à cette attaque
-//        http.csrf(csrf -> csrf.disable());
-//        //On protège nos routes
-//        http.authorizeHttpRequests(request -> request
-//                .requestMatchers("/api/protected").authenticated()
-//                .requestMatchers("/api/booking").authenticated()
-//                .requestMatchers(HttpMethod.PATCH, "/api/account").authenticated()
-//                .anyRequest().permitAll());
-//
-//        //On dit à spring security de ne jamais créer de session, du fait qu'on utilise du JWT
-//        http.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
-//        //On register notre Filter JWT avant que se fasse les vérification d'authentification
-//        http.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
-//
-//        return http.build();
-//    }
 
     @Bean
     public AuthenticationManager authenticationManager() {

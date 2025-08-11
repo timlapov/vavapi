@@ -18,7 +18,6 @@ import org.mapstruct.ReportingPolicy;
         unmappedTargetPolicy = ReportingPolicy.IGNORE
 )
 public abstract class ReviewMapper {
-//        @Mapping(target = "author", source = "authorId")
         public abstract Review map(ReviewCreateDTO dto);
 
         @Mapping(source = "author.firstName", target = "authorFirstName")
