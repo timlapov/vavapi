@@ -6,7 +6,7 @@ import art.lapov.vavapi.dto.ReviewUpdateDTO;
 import art.lapov.vavapi.exception.ResourceNotFoundException;
 import art.lapov.vavapi.mapper.ReviewMapper;
 import art.lapov.vavapi.model.Reservation;
-import art.lapov.vavapi.model.ReservationStatus;
+import art.lapov.vavapi.enums.ReservationStatus;
 import art.lapov.vavapi.model.Review;
 import art.lapov.vavapi.model.User;
 import art.lapov.vavapi.repository.ReservationRepository;
@@ -19,7 +19,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor

@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @AllArgsConstructor
@@ -82,14 +83,11 @@ public class PricingIntervalController {
      * Public endpoint
      */
     @GetMapping("/check-availability")
-    public AvailabilityResponse checkAvailability(
+    public Map<String, Boolean> checkAvailability(
             @RequestParam String stationId,
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime startTime,
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime endTime) {
         boolean available = pricingIntervalService.isStationAvailable(stationId, startTime, endTime);
-        return new AvailabilityResponse(available);
+        return Map.of("available", available);
     }
-
-    // Inner class for availability response
-    record AvailabilityResponse(boolean available) {}
 }

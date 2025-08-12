@@ -1,5 +1,6 @@
 package art.lapov.vavapi.service;
 
+import art.lapov.vavapi.model.Reservation;
 import art.lapov.vavapi.model.User;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
@@ -66,4 +67,47 @@ class MailService {
         }
     }
 
+    // TODO
+    public void sendReservationAccepted(User client, Reservation updated) {
+    }
+
+    // TODO
+    public void sendReviewRequest(User client, Reservation reservation) {
+    }
+
+    // TODO
+    public void sendReservationRejected(User client, Reservation updated, String reason) {
+    }
+
+    // TODO
+    public void sendReservationConfirmation(User client, Reservation saved) {
+    }
+
+    // TODO
+    public void sendReservationCancelled(User owner, Reservation reservation) {
+    }
+
+    // TODO
+    public void sendNewReservationRequest(User owner, Reservation saved) {
+    }
+
+    // TODO
+    public void sendReservationRequestReceived(User client, Reservation saved) {
+    }
+
+    // TODO
+    public void sendReservationAcceptedPleasePayRequest(User client, Reservation updated) {
+    }
+
+    // TODO
+    public void sendPaymentConfirmation(User client, Reservation updated) {
+    }
+
+    // TODO
+    public void sendPaymentReceivedNotification(User owner, Reservation updated) {
+    }
+
+    // TODO
+    public void sendCancellationWithRefund(User client, Reservation reservation, int i) {
+    }
 }

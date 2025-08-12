@@ -1,6 +1,6 @@
 package art.lapov.vavapi.dto;
 
-import art.lapov.vavapi.model.ConnectorType;
+import art.lapov.vavapi.enums.ConnectorType;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import lombok.Value;

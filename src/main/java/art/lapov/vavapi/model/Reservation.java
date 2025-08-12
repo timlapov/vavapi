@@ -1,5 +1,6 @@
 package art.lapov.vavapi.model;
 
+import art.lapov.vavapi.enums.ReservationStatus;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EntityListeners;
 import jakarta.persistence.EnumType;

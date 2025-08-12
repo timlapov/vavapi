@@ -11,13 +11,12 @@ import java.io.Serializable;
  * DTO for {@link art.lapov.vavapi.model.Station}
  */
 @Value
-public class StationUpdateDTO implements Serializable {
+public class StationShortDTO implements Serializable {
+    String id;
     @Positive
     Long maxPowerWatt;
     @NotNull
     ConnectorType connectorType;
-    @NotNull
-    Boolean enabled;
     String description;
-    String photoUrl;
+    LocationShortDTO location;
 }

@@ -29,4 +29,8 @@ public class Payment implements BaseEntity {
     private LocalDateTime paidAt;
     @NotBlank
     private String transactionId;
+    private LocalDateTime refundedAt;
+    private Integer refundedAmountInCents;
+    private String refundTransactionId;
+    private String refundReason;
 }

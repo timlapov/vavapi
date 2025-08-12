@@ -1,11 +1,11 @@
 package art.lapov.vavapi.config;
 
-import art.lapov.vavapi.model.ConnectorType;
+import art.lapov.vavapi.enums.ConnectorType;
 import art.lapov.vavapi.model.Location;
 import art.lapov.vavapi.model.Payment;
 import art.lapov.vavapi.model.PricingInterval;
 import art.lapov.vavapi.model.Reservation;
-import art.lapov.vavapi.model.ReservationStatus;
+import art.lapov.vavapi.enums.ReservationStatus;
 import art.lapov.vavapi.model.Review;
 import art.lapov.vavapi.model.Station;
 import art.lapov.vavapi.model.User;

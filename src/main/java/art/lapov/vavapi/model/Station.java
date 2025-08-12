@@ -1,5 +1,6 @@
 package art.lapov.vavapi.model;
 
+import art.lapov.vavapi.enums.ConnectorType;
 import art.lapov.vavapi.utils.UrlUtil;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;

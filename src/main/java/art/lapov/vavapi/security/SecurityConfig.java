@@ -31,22 +31,43 @@ public class SecurityConfig {
     SecurityFilterChain securityFilter(HttpSecurity http) throws Exception {
         http.csrf(AbstractHttpConfigurer::disable);
         http.authorizeHttpRequests(request -> request
+
                 // STATIONS:
                 .requestMatchers(HttpMethod.POST, "/api/stations").authenticated()
                 .requestMatchers(HttpMethod.PUT, "/api/stations/**").authenticated()
                 .requestMatchers(HttpMethod.DELETE, "/api/stations/**").authenticated()
+
                 // LOCATIONS:
                 .requestMatchers(HttpMethod.POST, "/api/locations").authenticated()
                 .requestMatchers(HttpMethod.PUT, "/api/locations/**").authenticated()
                 .requestMatchers(HttpMethod.DELETE, "/api/locations/**").authenticated()
+
                 // PRICING INTERVALS:
+                // Public endpoints
                 .requestMatchers(HttpMethod.GET, "/api/pricing-intervals/station/**").permitAll()
                 .requestMatchers(HttpMethod.GET, "/api/pricing-intervals/calculate-cost").permitAll()
                 .requestMatchers(HttpMethod.GET, "/api/pricing-intervals/check-availability").permitAll()
+                // Authenticated endpoints
                 .requestMatchers(HttpMethod.POST, "/api/pricing-intervals").authenticated()
                 .requestMatchers(HttpMethod.PUT, "/api/pricing-intervals/**").authenticated()
                 .requestMatchers(HttpMethod.DELETE, "/api/pricing-intervals/**").authenticated()
-                //
+
+                // RESERVATIONS:
+                // Public endpoints
+                .requestMatchers(HttpMethod.GET, "/api/reservations/check-availability").permitAll()
+                // Authenticated endpoints
+                .requestMatchers(HttpMethod.POST, "/api/reservations").authenticated()
+                .requestMatchers(HttpMethod.GET, "/api/reservations/my").authenticated()
+                .requestMatchers(HttpMethod.GET, "/api/reservations/upcoming").authenticated()
+                .requestMatchers(HttpMethod.GET, "/api/reservations/history").authenticated()
+                .requestMatchers(HttpMethod.GET, "/api/reservations/pending-approval").authenticated()
+                .requestMatchers(HttpMethod.GET, "/api/reservations/station/**").authenticated()
+                .requestMatchers(HttpMethod.GET, "/api/reservations/**").authenticated()
+                .requestMatchers(HttpMethod.PUT, "/api/reservations/{id}/accept").authenticated()
+                .requestMatchers(HttpMethod.PUT, "/api/reservations/{id}/reject").authenticated()
+                .requestMatchers(HttpMethod.PUT, "/api/reservations/{id}/complete").authenticated()
+                .requestMatchers(HttpMethod.DELETE, "/api/reservations/**").authenticated()
+
                 .anyRequest().permitAll());
         http.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
         http.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
