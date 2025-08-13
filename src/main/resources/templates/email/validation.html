@@ -5,83 +5,108 @@
     <title>Vérification de votre email</title>
     <style>
         :root {
-            --primary-color: #000000;
-            --accent-color: #f2e904;
-            --bg-color:      #f4f4f4;
-            --text-color:    #333333;
-            --btn-hover: #bdbd02;
+            --vav-400: #fffd00;
+            --vav-500: #dbda00;
+            --vav-800: #a8a700;
+            --vav-900: #807f00;
+
+            --bg-body: #0f0f0f;      /* dark page bg */
+            --bg-card: #111111;      /* panel bg */
+            --text-body: #e5e5e5;    /* primary text */
+            --text-muted: #b3b3b3;   /* secondary text */
+            --border: #262626;       /* subtle borders */
         }
+
+        /* --- Base --- */
+        html, body { height: 100%; }
         body {
             margin: 0;
             padding: 20px;
-            background-color: var(--bg-color);
-            font-family: 'Helvetica Neue', Arial, sans-serif;
-            color: var(--text-color);
+            background-color: var(--bg-body);
+            color: var(--text-body);
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            font-family: "Montserrat", ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
         }
+
+        /* --- Layout --- */
         .container {
             max-width: 600px;
             margin: 0 auto;
-            background-color: #ffffff;
-            overflow: hidden;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            background-color: var(--bg-card);
+            border: 1px solid var(--border);
+            border-top: 4px solid var(--vav-400);
+            /* no rounded corners */
         }
+
         .header {
-            background-color: var(--primary-color);
+            background-color: #0f0f0f;
             color: #ffffff;
             padding: 16px;
             text-align: center;
+            border-bottom: 1px solid var(--border);
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+            font-weight: 700;
         }
-        .header h1 {
-            margin: 0;
-            font-size: 24px;
-        }
-        .content {
-            padding: 24px;
-        }
-        .content h2 {
-            font-size: 20px;
-            margin-top: 0;
-        }
-        .content p {
-            line-height: 1.5;
-            margin: 16px 0;
-        }
+        .header h1 { margin: 0; font-size: 18px; }
+
+        .content { padding: 24px; }
+        .content h2 { font-size: 22px; margin: 0 0 12px 0; font-weight: 700; }
+        .content p { line-height: 1.6; margin: 16px 0; color: var(--text-body); }
+
+        .cta { text-align: center; margin: 24px 0; }
+
         .btn {
             display: inline-block;
-            padding: 12px 24px;
-            background-color: var(--accent-color);
+            padding: 12px 20px;
+            background-color: var(--vav-400);
             color: #000000 !important;
             text-decoration: none;
-            font-weight: bold;
+            font-weight: 700;
+            border: 1px solid var(--vav-500);
+            /* no border-radius */
         }
-        .btn:hover {
-            background-color: var(--btn-hover);
-        }
+        .btn:hover { background-color: var(--vav-800); }
+
         .footer {
             font-size: 12px;
-            color: #777777;
+            color: var(--text-muted);
             text-align: center;
             padding: 16px;
+            border-top: 1px solid var(--border);
+        }
+
+        /* --- Mobile --- */
+        @media (max-width: 600px) {
+            body { padding: 12px; }
+            .content { padding: 20px; }
+            .btn { display: block; width: 100%; text-align: center; }
         }
     </style>
 </head>
 <body>
 <div class="container">
     <div class="header">
-        <h1>Confirmation d’email</h1>
+        <h1>Volt à vous</h1>
     </div>
+
     <div class="content">
-        <h2>Bonjour, <span th:text="${name}">Utilisateur</span> !</h2>
+        <h2>Vérification de votre email</h2>
         <p>
-            Merci de vous être inscrit sur notre site. Pour finaliser votre inscription, veuillez confirmer votre adresse email en cliquant sur le bouton ci-dessous.
+            Bonjour, <span th:text="${name}">Utilisateur</span> !
         </p>
-        <p style="text-align: center;">
+        <p>
+            Merci de vous être inscrit sur notre site. Pour finaliser votre inscription, veuillez confirmer votre adresse email en cliquant sur le bouton ci‑dessous.
+        </p>
+        <p class="cta">
             <a class="btn" th:href="${verificationUrl}">Confirmer mon email</a>
         </p>
         <p>
             Si vous n’avez pas créé de compte, ignorez simplement ce message.
         </p>
     </div>
+
     <div class="footer">
         &copy; 2025 Volt à vous. Tous droits réservés.
     </div>

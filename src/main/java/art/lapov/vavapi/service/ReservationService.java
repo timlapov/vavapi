@@ -165,10 +165,6 @@ public class ReservationService {
 
         Reservation updated = reservationRepository.save(reservation);
 
-        // Send confirmation to both parties
-        mailService.sendPaymentConfirmation(client, updated);
-        mailService.sendPaymentReceivedNotification(reservation.getStation().getLocation().getOwner(), updated);
-
         return reservationMapper.map(updated);
     }
 
@@ -282,10 +278,6 @@ public class ReservationService {
 
                 reservationRepository.save(reservation);
 
-                // Notify both parties
-                mailService.sendCancellationWithRefund(client, reservation, fullRefund ? 100 : 50);
-                mailService.sendReservationCancelled(
-                        reservation.getStation().getLocation().getOwner(), reservation);
                 break;
 
             case COMPLETED, REJECTED, CANCELLED:
@@ -315,9 +307,6 @@ public class ReservationService {
 
         reservation.setStatus(ReservationStatus.COMPLETED);
         reservationRepository.save(reservation);
-
-        // Send review request to client
-        mailService.sendReviewRequest(reservation.getClient(), reservation);
     }
 
     /**

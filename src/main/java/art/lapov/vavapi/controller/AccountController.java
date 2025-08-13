@@ -10,6 +10,8 @@ import art.lapov.vavapi.model.User;
 import art.lapov.vavapi.service.AccountService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -28,13 +30,14 @@ import org.springframework.web.server.ResponseStatusException;
 import java.net.URI;
 
 @RestController
-@AllArgsConstructor
+@RequiredArgsConstructor
 @RequestMapping("/api/account")
 class AccountController {
-    private AccountService accountService;
-    private UserMapper userMapper;
+    private final AccountService accountService;
+    private final UserMapper userMapper;
 
-    private final String loginUrl = "http://localhost:4200/login";
+    @Value("${app.frontend.login.url}")
+    private String loginUrl;
 
     /**
      * Registers a new user.

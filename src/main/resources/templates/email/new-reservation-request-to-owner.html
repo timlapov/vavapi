@@ -2,8 +2,9 @@
 <html lang="fr" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8" />
-    <title>Récupération du mot de passe</title>
+    <title>Nouvelle demande de réservation</title>
     <style>
+        /* --- Brand tokens (Angular project) --- */
         :root {
             --vav-400: #fffd00;
             --vav-500: #dbda00;
@@ -36,7 +37,7 @@
             background-color: var(--bg-card);
             border: 1px solid var(--border);
             border-top: 4px solid var(--vav-400);
-            /* no rounded corners per spec */
+            /* no rounded corners */
         }
 
         .header {
@@ -54,6 +55,12 @@
         .content { padding: 24px; }
         .content h2 { font-size: 22px; margin: 0 0 12px 0; font-weight: 700; }
         .content p { line-height: 1.6; margin: 16px 0; color: var(--text-body); }
+
+        .details { margin: 16px 0 24px 0; }
+        .details table { width: 100%; border-collapse: collapse; }
+        .details th, .details td { text-align: left; padding: 10px 0; font-size: 14px; }
+        .details tr + tr th, .details tr + tr td { border-top: 1px solid var(--border); }
+        .details th { color: var(--text-muted); font-weight: 600; width: 36%; }
 
         .cta { text-align: center; margin: 24px 0; }
 
@@ -92,16 +99,43 @@
     </div>
 
     <div class="content">
-        <h2>Récupération du mot de passe</h2>
+        <h2>Nouvelle demande de réservation</h2>
         <p>
-            Vous pouvez réinitialiser votre mot de passe en cliquant sur le bouton ci‑dessous.
+            Bonjour, <span th:text="${name}">Propriétaire</span>.
         </p>
+        <p>
+            Vous avez reçu une nouvelle demande pour votre station. Merci de la vérifier et de la <strong>confirmer ou refuser</strong>. Tant que la demande n'est pas confirmée, le client ne peut pas procéder au paiement.
+        </p>
+
+        <div class="details">
+            <table role="presentation">
+                <tr>
+                    <th>Station</th>
+                    <td th:text="${stationName}">Nom de la station</td>
+                </tr>
+                <tr>
+                    <th>Client</th>
+                    <td th:text="${clientName}">Nom du client</td>
+                </tr>
+                <tr>
+                    <th>Début</th>
+                    <td th:text="${#temporals.format(startDate, 'dd MMM yyyy HH:mm')}">01 janv. 2025 12:00</td>
+                </tr>
+                <tr>
+                    <th>Fin</th>
+                    <td th:text="${#temporals.format(endDate, 'dd MMM yyyy HH:mm')}">01 janv. 2025 14:00</td>
+                </tr>
+                <tr>
+                    <th>ID de réservation</th>
+                    <td th:text="${reservationId}">R-123456</td>
+                </tr>
+            </table>
+        </div>
+
         <p class="cta">
-            <a class="btn" th:href="${resetPasswordLink}">Choisir un nouveau mot de passe</a>
+            <a class="btn" th:href="${linkToDashboard}">Gérer la demande</a>
         </p>
-        <p>
-            Si vous n'avez pas fait cette demande, ignorez ce message.
-        </p>
+
     </div>
 
     <div class="footer">
