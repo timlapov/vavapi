@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8" />
+    <title th:text="'Reçu de réservation — #' + ${r.id}">Reçu de réservation</title>
+    <style>
+        /* --- No CSS variables, no flex, only supported CSS --- */
+        @page{
+            size: A4;
+            margin: 18mm 16mm 20mm 16mm;
+            @bottom-center { content: "Page " counter(page) " / " counter(pages); font-size: 10px; }
+        }
+
+        /* Use the same family name you register in Java: "Montserrat" */
+        body{
+            margin:0; background:#ffffff; color:#111111;
+            font-family:"Montserrat", Arial, sans-serif; font-size:12px;
+        }
+
+        .receipt{ max-width:760px; margin:0 auto; }
+        .brand-bar{ height:6px; background:#fffd00; } /* VAV accent */
+
+        /* Header without flex: table layout is well supported */
+        .header{ padding:12px 0; border-bottom:1px solid #e6e6e6; }
+        .header-table{ width:100%; border-collapse:collapse; }
+        .header-table td{ vertical-align:middle; }
+        .header-logo{ height:40px; }
+        .header-title{ margin:0; font-size:20px; font-weight:700; }
+        .header-number{ margin:2px 0 0 0; font-size:12px; color:#666666; }
+
+        .section{ padding:14px 0; }
+
+        /* Key-Value table */
+        .kvs{ width:100%; border-collapse:collapse; }
+        .kvs tr + tr td{ border-top:1px solid #e6e6e6; }
+        .kvs td{ padding:8px 0; vertical-align:top; }
+        .kvs td.label{ width:32%; color:#666666; font-weight:700; }
+        .kvs td.value{ font-weight:700; color:#111111; }
+
+        .total{
+            margin-top:10px; padding-top:12px; border-top:2px solid #111111;
+            font-size:18px; font-weight:700;
+        }
+        .muted{ color:#666666; font-size:11px; }
+
+        /* Avoid page breaks inside important blocks */
+        .section, .kvs, .total{ page-break-inside:avoid; }
+    </style>
+</head>
+<body>
+<div class="receipt">
+    <div class="brand-bar"></div>
+
+    <div class="header">
+        <table class="header-table" role="presentation">
+            <tr>
+                <td style="width:120px;">
+        <img src="logo.png" alt="Volt à vous" class="header-logo"/>
+                </td>
+                <td>
+        <div>
+            <h1 class="header-title">Reçu de réservation</h1>
+            <div class="header-number">N° <span th:text="${r.id}">12345</span></div>
+        </div>
+                </td>
+            </tr>
+            </table>
+    </div>
+
+    <div class="section">
+        <table class="kvs" role="presentation" aria-label="Détails de la réservation">
+            <tr><td class="label">Client</td><td class="value" th:text="${r.client.getFullName()}">Alex Dupont</td></tr>
+            <tr><td class="label">Station</td><td class="value" th:text="${r.station.getLocation().getName()}">Station Lyon — Bellecour</td></tr>
+            <tr><td class="label">Adresse de la station</td><td class="value" th:text="${r.station.getLocation().getAddress()}">2 Place Bellecour, 69002 Lyon</td></tr>
+            <tr>
+                <td class="label">Période</td>
+                <td class="value">
+                    <span th:text="${#temporals.format(r.startDate, 'dd/MM/yyyy HH:mm')}">01/09/2025 10:00</span>
+                    →
+                    <span th:text="${#temporals.format(r.endDate, 'dd/MM/yyyy HH:mm')}">01/09/2025 12:30</span>
+                </td>
+            </tr>
+            <tr><td class="label">Durée (h)</td><td class="value" th:text="${#numbers.formatDecimal(r.getDurationHours(),1,'COMMA',2,'POINT')}">2,50</td></tr>
+            <tr><td class="label">Statut</td><td class="value" th:text="${r.getStatus()}">COMPLÉTÉE</td></tr>
+        </table>
+
+        <div class="total">
+            Total TTC :
+            <span th:text="${#numbers.formatDecimal(r.getTotalCostEuros(),1,'COMMA',2,'POINT')} + ' €'">7,50 €</span>
+        </div>
+
+        <p class="muted">Merci pour votre réservation. Conservez ce reçu pour vos dossiers.</p>
+    </div>
+</div>
+</body>
+</html>

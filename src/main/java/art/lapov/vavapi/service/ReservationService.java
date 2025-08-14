@@ -23,6 +23,8 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
+import static org.springframework.http.HttpStatus.NOT_FOUND;
+
 @Service
 @AllArgsConstructor
 public class ReservationService {
@@ -406,5 +408,11 @@ public class ReservationService {
     public Page<ReservationDTO> getPastReservations(User user, Pageable pageable) {
         return reservationRepository.findPastReservations(user, LocalDateTime.now(), pageable)
                 .map(reservationMapper::map);
+    }
+
+    @Transactional(readOnly = true)
+    public Reservation getOwnedOrClientReservation(String reservationId, User me) {
+        return reservationRepository.findVisibleToUser(reservationId, me.getId())
+                .orElseThrow(() -> new ResponseStatusException(NOT_FOUND, "Reservation not found"));
     }
 }

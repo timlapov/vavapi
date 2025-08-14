@@ -7,13 +7,17 @@ import art.lapov.vavapi.dto.ReservationCreateDTO;
 import art.lapov.vavapi.dto.ReservationDTO;
 import art.lapov.vavapi.model.User;
 import art.lapov.vavapi.service.ReservationService;
+import art.lapov.vavapi.service.receipt.ReceiptFacade;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
@@ -26,6 +30,7 @@ import java.util.Map;
 public class ReservationController {
 
     private final ReservationService reservationService;
+    private final ReceiptFacade receiptFacade;
 
     /**
      * Create a new reservation
@@ -204,6 +209,15 @@ public class ReservationController {
             @AuthenticationPrincipal User client,
             @RequestBody @Valid PaymentDetailsDTO paymentDetails) {
         return reservationService.processPayment(id, client, paymentDetails);
+    }
+
+    @GetMapping("/{id}/receipt.pdf")
+    public ResponseEntity<byte[]> downloadReceipt(@PathVariable String id, @AuthenticationPrincipal User user) {
+        byte[] pdf = receiptFacade.buildReceiptPdf(id, user);
+        return ResponseEntity.ok()
+                .contentType(MediaType.APPLICATION_PDF)
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=receipt-" + id + ".pdf")
+                .body(pdf);
     }
 
 }

@@ -16,4 +16,8 @@ public class UserShortDTO implements Serializable {
     @NotBlank
     String lastName;
     String miniAvatarUrl;
+
+    public String getFullName() {
+        return firstName + " " + lastName;
+    }
 }

@@ -13,6 +13,7 @@ import org.springframework.stereotype.Repository;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface ReservationRepository extends JpaRepository<Reservation, String> {
@@ -109,4 +110,13 @@ public interface ReservationRepository extends JpaRepository<Reservation, String
             @Param("client") User client,
             @Param("now") LocalDateTime now,
             Pageable pageable);
+
+    // Single SQL: checks both client and station owner in WHERE
+    @Query("""
+        SELECT r FROM Reservation r
+          JOIN r.station s
+         WHERE r.id = :id
+           AND r.client.id = :userId
+        """)
+    Optional<Reservation> findVisibleToUser(String id, String userId);
 }
