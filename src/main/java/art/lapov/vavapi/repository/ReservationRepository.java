@@ -111,12 +111,23 @@ public interface ReservationRepository extends JpaRepository<Reservation, String
             @Param("now") LocalDateTime now,
             Pageable pageable);
 
-    // Single SQL: checks both client and station owner in WHERE
-    @Query("""
-        SELECT r FROM Reservation r
-          JOIN r.station s
-         WHERE r.id = :id
-           AND r.client.id = :userId
-        """)
+    @Query("SELECT r FROM Reservation r JOIN r.station s WHERE r.id = :id AND r.client.id = :userId")
     Optional<Reservation> findVisibleToUser(String id, String userId);
+
+    /**
+     * Find completed reservations for station owner
+     */
+    @Query("SELECT r FROM Reservation r WHERE r.station.location.owner = :owner " +
+            "AND r.status = 'COMPLETED' " +
+            "ORDER BY r.endDate DESC")
+    List<Reservation> findCompletedReservationsForOwner(@Param("owner") User owner);
+
+    /**
+     * Find completed reservations for client
+     */
+    @Query("SELECT r FROM Reservation r WHERE r.client = :client " +
+            "AND r.status = 'COMPLETED' " +
+            "ORDER BY r.endDate DESC")
+    List<Reservation> findCompletedReservationsForClient(@Param("client") User client);
+
 }

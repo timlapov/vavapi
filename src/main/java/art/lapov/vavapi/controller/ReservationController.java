@@ -8,19 +8,24 @@ import art.lapov.vavapi.dto.ReservationDTO;
 import art.lapov.vavapi.model.User;
 import art.lapov.vavapi.service.ReservationService;
 import art.lapov.vavapi.service.receipt.ReceiptFacade;
+import art.lapov.vavapi.service.report.XlsxGenerationService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.http.ContentDisposition;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
+import java.io.IOException;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Map;
 
@@ -29,6 +34,7 @@ import java.util.Map;
 @RequestMapping("/api/reservations")
 public class ReservationController {
 
+    private final XlsxGenerationService xlsxGenerationService;
     private final ReservationService reservationService;
     private final ReceiptFacade receiptFacade;
 
@@ -211,6 +217,9 @@ public class ReservationController {
         return reservationService.processPayment(id, client, paymentDetails);
     }
 
+    /**
+     * The client receives the reservation receipt in PDF format
+     */
     @GetMapping("/{id}/receipt.pdf")
     public ResponseEntity<byte[]> downloadReceipt(@PathVariable String id, @AuthenticationPrincipal User user) {
         byte[] pdf = receiptFacade.buildReceiptPdf(id, user);
@@ -218,6 +227,54 @@ public class ReservationController {
                 .contentType(MediaType.APPLICATION_PDF)
                 .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=receipt-" + id + ".pdf")
                 .body(pdf);
+    }
+
+    /**
+     * Export completed reservations as CLIENT to Excel
+     * Downloads all past reservations where the user was the client
+     */
+    @GetMapping("/export/client-reservations.xlsx")
+    public ResponseEntity<byte[]> exportClientReservations(@AuthenticationPrincipal User client) {
+        try {
+            byte[] excelFile = xlsxGenerationService.generateClientReservationsReport(client);
+
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
+            headers.setContentDisposition(ContentDisposition.attachment()
+                    .filename("my-reservations-" + LocalDate.now() + ".xlsx")
+                    .build());
+
+            return ResponseEntity.ok()
+                    .headers(headers)
+                    .body(excelFile);
+        } catch (IOException e) {
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR,
+                    "Error generating Excel report");
+        }
+    }
+
+    /**
+     * Export completed reservations as OWNER to Excel
+     * Downloads all past reservations for stations owned by the user
+     */
+    @GetMapping("/export/owner-reservations.xlsx")
+    public ResponseEntity<byte[]> exportOwnerReservations(@AuthenticationPrincipal User owner) {
+        try {
+            byte[] excelFile = xlsxGenerationService.generateOwnerReservationsReport(owner);
+
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
+            headers.setContentDisposition(ContentDisposition.attachment()
+                    .filename("reservations-my-stations-" + LocalDate.now() + ".xlsx")
+                    .build());
+
+            return ResponseEntity.ok()
+                    .headers(headers)
+                    .body(excelFile);
+        } catch (IOException e) {
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR,
+                    "Error generating Excel report");
+        }
     }
 
 }
