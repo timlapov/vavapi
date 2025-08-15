@@ -22,6 +22,7 @@ import java.util.List;
 public class ReservationAutoCompletionService {
 
     private final ReservationRepository reservationRepository;
+    private final MailService mailService;
 
     /**
      * Main scheduled task - runs every 5 minutes
@@ -57,7 +58,7 @@ public class ReservationAutoCompletionService {
                             reservation.getEndDate());
 
                     // TODO Send notification to client that reservation is completed
-                    // mailService.sendReservationCompleted(reservation.getClient(), reservation);
+                    mailService.sendReservationCompleted(reservation.getClient(), reservation);
 
                 } catch (Exception e) {
                     log.error("Error completing reservation {}: {}",

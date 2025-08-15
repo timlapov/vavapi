@@ -235,4 +235,36 @@ class MailService {
         }
     }
 
+    // Send notification to client that reservation is completed and invite them to leave feedback
+    public void sendReservationCompleted(User client, Reservation reservation) {
+        Context ctx = new Context();
+
+        ctx.setVariable("name", client.getFirstName());
+        ctx.setVariable("stationName", reservation.getStation().getLocation().getName());
+        ctx.setVariable("startDate", reservation.getStartDate());
+        ctx.setVariable("endDate", reservation.getEndDate());
+        ctx.setVariable("reservationId", reservation.getId());
+
+        String linkToDashboard = frontBaseUrl + "/dashboard";
+        ctx.setVariable("linkToDashboard", linkToDashboard);
+
+        String htmlContent = templateEngine.process("email/reservation-completed-feedback", ctx);
+
+        MimeMessage mimeMessage = mailSender.createMimeMessage();
+        try {
+            MimeMessageHelper helper = new MimeMessageHelper(
+                    mimeMessage,
+                    MimeMessageHelper.MULTIPART_MODE_MIXED_RELATED,
+                    "UTF-8"
+            );
+            helper.setTo(client.getEmail());
+            helper.setFrom(myEmail);
+            helper.setSubject("Volt à vous : Réservation terminée — laissez un avis");
+            helper.setText(htmlContent, true); // true => HTML
+
+            mailSender.send(mimeMessage);
+        } catch (MessagingException e) {
+            throw new MailSendException("Failed to send email", e);
+        }
+    }
 }
