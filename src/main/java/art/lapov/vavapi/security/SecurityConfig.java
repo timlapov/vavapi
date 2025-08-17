@@ -32,6 +32,9 @@ public class SecurityConfig {
         http.csrf(AbstractHttpConfigurer::disable);
         http.authorizeHttpRequests(request -> request
 
+                // USERS (ADMIN ONLY):
+                .requestMatchers("/api/users/**").hasRole("ADMIN")
+
                 // STATIONS:
                 .requestMatchers(HttpMethod.POST, "/api/stations").authenticated()
                 .requestMatchers(HttpMethod.PUT, "/api/stations/**").authenticated()

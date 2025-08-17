@@ -18,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.time.Duration;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.ArrayList;
@@ -146,6 +147,11 @@ public class PricingIntervalService {
                     "No pricing intervals defined for this station");
         }
 
+        if (!isTimeCoveredByIntervals(startTime.toLocalTime(), endTime.toLocalTime(), intervals)) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+                    "Selected time period is not fully covered by pricing intervals");
+        }
+
         // Calculate total cost
         int totalCostInCents = calculateTotalCost(intervals, startTime, endTime);
 
@@ -231,7 +237,7 @@ public class PricingIntervalService {
 
         // For MVP, we calculate cost day by day
         while (currentTime.isBefore(endTime)) {
-            LocalDateTime dayEnd = currentTime.toLocalDate().atTime(LocalTime.MAX);
+            LocalDateTime dayEnd = currentTime.toLocalDate().plusDays(1).atStartOfDay();
             if (dayEnd.isAfter(endTime)) {
                 dayEnd = endTime;
             }
@@ -247,25 +253,25 @@ public class PricingIntervalService {
     }
 
     private int calculateDailyCost(List<PricingInterval> intervals,
-                                   LocalDateTime startTime, LocalDateTime endTime) {
+                                   LocalDateTime dayStartInclusive,
+                                   LocalDateTime dayEndExclusive) {
         int costInCents = 0;
-
         for (PricingInterval interval : intervals) {
-            // Calculate overlap between reservation and pricing interval
-            LocalDateTime intervalStart = startTime.toLocalDate().atTime(interval.getStartHour());
-            LocalDateTime intervalEnd = startTime.toLocalDate().atTime(interval.getEndHour());
+            // Build interval bounds for this date
+            LocalDate base = dayStartInclusive.toLocalDate();
+            LocalDateTime intervalStart = base.atTime(interval.getStartHour());
+            LocalDateTime intervalEndExclusive = toExclusiveEnd(base, interval.getEndHour());
 
-            // Find the overlap
-            LocalDateTime overlapStart = startTime.isAfter(intervalStart) ? startTime : intervalStart;
-            LocalDateTime overlapEnd = endTime.isBefore(intervalEnd) ? endTime : intervalEnd;
+            // Overlap on [start, end)
+            LocalDateTime overlapStart = intervalStart.isAfter(dayStartInclusive) ? intervalStart : dayStartInclusive;
+            LocalDateTime overlapEnd = intervalEndExclusive.isBefore(dayEndExclusive) ? intervalEndExclusive : dayEndExclusive;
 
             if (overlapStart.isBefore(overlapEnd)) {
-                // Calculate hours in this interval
-                double hours = Duration.between(overlapStart, overlapEnd).toMinutes() / 60.0;
-                costInCents += (int) (hours * interval.getHourlyPriceInCents());
+                long minutes = java.time.Duration.between(overlapStart, overlapEnd).toMinutes(); // exact minutes
+                // bill by minutes to avoid per-interval rounding drift
+                costInCents += (int) Math.round((minutes / 60.0) * interval.getHourlyPriceInCents());
             }
         }
-
         return costInCents;
     }
 
@@ -304,5 +310,17 @@ public class PricingIntervalService {
         return stationRepository.findById(stationId)
                 .map(station -> station.getLocation().getOwner().getId().equals(userId))
                 .orElse(false);
+    }
+
+    private static LocalDateTime toExclusiveEnd(java.time.LocalDate date, java.time.LocalTime end) {
+        // Treat 00:00 as midnight (exclusive -> next day start)
+        if (end.equals(java.time.LocalTime.MIDNIGHT)) {
+            return date.plusDays(1).atStartOfDay();
+        }
+        // Many UIs store "full day" as 23:59. Interpret it as midnight exclusive.
+        if (end.equals(java.time.LocalTime.of(23, 59))) {
+            return date.plusDays(1).atStartOfDay();
+        }
+        return date.atTime(end); // default: same day, end-exclusive
     }
 }

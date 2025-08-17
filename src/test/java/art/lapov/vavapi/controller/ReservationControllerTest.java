@@ -26,6 +26,7 @@ import java.util.Arrays;
 import java.util.Collections;
 
 import static org.hamcrest.Matchers.hasSize;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
@@ -487,6 +488,51 @@ class ReservationControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.content", hasSize(1)))
                 .andExpect(jsonPath("$.content[0].status").value("CREATED"));
+    }
+
+    // ============= CROSSING MIDNIGHT TESTS =============
+
+    @Test
+    @WithMockUser
+    void createReservation_CrossesMidnight_Success_CorrectTotalCost() throws Exception {
+        // Given: 22:00 → 02:00
+        LocalDateTime start = LocalDateTime.of(2026, 1, 15, 22, 0);
+        LocalDateTime end   = LocalDateTime.of(2026, 1, 16, 2, 0);
+
+        // Допустим, тарифы дают суммарно 10€ = 1000 центов
+        ReservationDTO midnightDTO = new ReservationDTO(
+                "res-789",
+                ReservationStatus.CREATED,
+                start,
+                end,
+                1000, // 10 €
+                LocalDateTime.now(),
+                null,
+                null,
+                createStationShortDTO(),
+                createUserShortDTO(),
+                null,
+                null
+        );
+
+        when(reservationService.createReservation(any(ReservationCreateDTO.class), any(User.class)))
+                .thenAnswer(inv -> {
+                    ReservationCreateDTO req = inv.getArgument(0, ReservationCreateDTO.class);
+                    assertEquals(start, req.getStartDate());
+                    assertEquals(end,   req.getEndDate());
+                    return midnightDTO;
+                });
+
+        ReservationCreateDTO payload = new ReservationCreateDTO("station-456", start, end);
+
+        // When / Then
+        mockMvc.perform(post("/api/reservations")
+                        .with(user(mockUser))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(payload)))
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$.id").value("res-789"))
+                .andExpect(jsonPath("$.totalCostInCents").value(1000));
     }
 
     // ============= HELPER METHODS =============

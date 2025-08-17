@@ -9,7 +9,6 @@ import art.lapov.vavapi.mapper.UserMapper;
 import art.lapov.vavapi.model.User;
 import art.lapov.vavapi.service.AccountService;
 import jakarta.validation.Valid;
-import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;

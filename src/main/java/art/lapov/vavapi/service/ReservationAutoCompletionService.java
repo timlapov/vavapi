@@ -57,7 +57,6 @@ public class ReservationAutoCompletionService {
                             reservation.getStation().getLocation().getName(),
                             reservation.getEndDate());
 
-                    // TODO Send notification to client that reservation is completed
                     mailService.sendReservationCompleted(reservation.getClient(), reservation);
 
                 } catch (Exception e) {

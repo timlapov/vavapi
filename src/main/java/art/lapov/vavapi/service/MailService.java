@@ -23,6 +23,8 @@ class MailService {
     private final String myEmail = "lapov.art@gmail.com";
     @Value("${app.frontend.base-url}")
     private String frontBaseUrl;
+    @Value("${app.frontend.login.url}")
+    private String loginUrl;
 
     public void sendEmailValidation(User user, String token) {
         String link = ServletUriComponentsBuilder.fromCurrentContextPath().toUriString()+"/api/account/validate/" + token;
@@ -267,4 +269,26 @@ class MailService {
             throw new MailSendException("Failed to send email", e);
         }
     }
+
+    public void sendResetPasswordByAdmin(User user, String newPassword) {
+        Context ctx = new Context();
+
+        ctx.setVariable("firstName", user.getFirstName());
+        ctx.setVariable("newPassword", newPassword);
+        ctx.setVariable("loginUrl", loginUrl);
+
+        String htmlContent = templateEngine.process("email/admin-password-reset", ctx);
+
+        try {
+            MimeMessage message = mailSender.createMimeMessage();
+            MimeMessageHelper helper = new MimeMessageHelper(message, "UTF-8");
+            helper.setTo(user.getEmail());
+            helper.setSubject("Nouveau mot de passe - Volt à vous");
+            helper.setText(htmlContent, true);
+            mailSender.send(message);
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to send password reset email", e);
+        }
+    }
+
 }
