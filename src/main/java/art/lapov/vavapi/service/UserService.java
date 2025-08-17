@@ -3,8 +3,10 @@ package art.lapov.vavapi.service;
 import art.lapov.vavapi.dto.UserDTO;
 import art.lapov.vavapi.dto.UserUpdateDTO;
 import art.lapov.vavapi.exception.ResourceNotFoundException;
+import art.lapov.vavapi.exception.UserHasActiveReservationException;
 import art.lapov.vavapi.mapper.UserMapper;
 import art.lapov.vavapi.model.User;
+import art.lapov.vavapi.repository.StationRepository;
 import art.lapov.vavapi.repository.UserRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -20,6 +22,7 @@ import java.util.UUID;
 public class UserService {
 
     private final UserRepository userRepository;
+    private final StationRepository stationRepository;
     private final UserMapper userMapper;
     private final PasswordEncoder passwordEncoder;
     private final MailService mailService;
@@ -62,11 +65,24 @@ public class UserService {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("User not found with id: " + id));
 
-        // TODO: Check for active reservations before deletion
+        // Same checks as in AccountService
+        if (userRepository.hasActiveReservations(user.getId())) {
+            throw new UserHasActiveReservationException("User has active reservations as client");
+        }
+
+        if (userRepository.hasActiveReservationsAsOwner(user.getId())) {
+            throw new UserHasActiveReservationException("User has active reservations on their stations");
+        }
+
+        if (stationRepository.hasActiveStations(user.getId())) {
+            throw new UserHasActiveReservationException("User has active stations. Please disable all stations first");
+        }
+
         user.setDeleted(true);
         user.setValidated(false); // Prevent login
         userRepository.save(user);
     }
+
 
     /**
      * Toggle user validation status

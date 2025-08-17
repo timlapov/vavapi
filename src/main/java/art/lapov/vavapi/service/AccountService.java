@@ -2,7 +2,9 @@ package art.lapov.vavapi.service;
 
 import art.lapov.vavapi.dto.UserUpdateDTO;
 import art.lapov.vavapi.exception.UserAlreadyExistsException;
+import art.lapov.vavapi.exception.UserHasActiveReservationException;
 import art.lapov.vavapi.model.User;
+import art.lapov.vavapi.repository.StationRepository;
 import art.lapov.vavapi.repository.UserRepository;
 import art.lapov.vavapi.utils.JwtUtil;
 import lombok.AllArgsConstructor;
@@ -18,10 +20,10 @@ import java.time.temporal.ChronoUnit;
 @AllArgsConstructor
 public class AccountService {
     private UserRepository userRepository;
+    private StationRepository stationRepository;
     private MailService mailService;
     private PasswordEncoder passwordEncoder;
     private JwtUtil jwtUtil;
-//    private static final Logger logger = LoggerFactory.getLogger(AccountService.class);
     private static final Logger auditLogger = LoggerFactory.getLogger("audit");
 
     public User register(User user) {
@@ -64,11 +66,33 @@ public class AccountService {
 
     public void deleteUser(String email) {
         User user = userRepository.findByEmail(email).orElseThrow();
-        // TODO Check that there are no active stations or pending orders
+
+        // Check for active reservations as client
+        if (userRepository.hasActiveReservations(user.getId())) {
+            auditLogger.warn("Cannot delete user - has active reservations as client: email={}, userId={}",
+                    user.getEmail(), user.getId());
+            throw new UserHasActiveReservationException("User has active reservations as client");
+        }
+
+        // Check for active reservations on user's stations (as owner)
+        if (userRepository.hasActiveReservationsAsOwner(user.getId())) {
+            auditLogger.warn("Cannot delete user - has active reservations on owned stations: email={}, userId={}",
+                    user.getEmail(), user.getId());
+            throw new UserHasActiveReservationException("User has active reservations on their stations");
+        }
+
+        // Check for active stations
+        if (stationRepository.hasActiveStations(user.getId())) {
+            auditLogger.warn("Cannot delete user - has active stations: email={}, userId={}",
+                    user.getEmail(), user.getId());
+            throw new UserHasActiveReservationException("User has active stations. Please disable all stations first");
+        }
+
         user.setDeleted(true);
         userRepository.save(user);
         auditLogger.info("User marked as deleted: email={}, userId={}", user.getEmail(), user.getId());
     }
+
 
     public User updateUser(UserUpdateDTO userDto) {
         User user = userRepository.findByEmail(userDto.getEmail()).orElseThrow();

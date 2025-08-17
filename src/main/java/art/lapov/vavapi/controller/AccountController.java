@@ -81,7 +81,7 @@ class AccountController {
         try {
             accountService.deleteUser(email);
         } catch (Exception e) {
-            throw new UserHasActiveReservationException();
+            throw new UserHasActiveReservationException("User has active reservations on their stations");
         }
         return ResponseEntity.ok().build();
     }

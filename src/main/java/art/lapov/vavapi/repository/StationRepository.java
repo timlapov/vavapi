@@ -18,5 +18,15 @@ public interface StationRepository extends JpaRepository<Station, String> {
     @Query("SELECT s FROM Station s WHERE s.location.id = :locationId AND s.enabled = true AND (s.deleted = false OR s.deleted IS NULL)")
     List<Station> findByLocationIdAndEnabledTrue(@Param("locationId") String locationId);
 
+    /**
+     * Check if user has any enabled stations
+     */
+    @Query("SELECT COUNT(s) > 0 FROM Station s " +
+            "WHERE s.location.owner.id = :userId " +
+            "AND s.enabled = true " +
+            "AND (s.deleted = false OR s.deleted IS NULL)")
+    boolean hasActiveStations(@Param("userId") String userId);
+
+
 
 }
