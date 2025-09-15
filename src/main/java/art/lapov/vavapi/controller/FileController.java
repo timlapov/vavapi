@@ -8,6 +8,7 @@ import art.lapov.vavapi.service.LocationService;
 import art.lapov.vavapi.service.StationService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
@@ -30,7 +31,7 @@ public class FileController {
 
     private StationService stationService;
 
-    @PostMapping("/avatar")
+    @PostMapping(value = "/avatar", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<Map<String, String>> uploadAvatar(@RequestParam("file") MultipartFile file,
                                           @AuthenticationPrincipal User user) {
         try {
@@ -49,7 +50,7 @@ public class FileController {
         }
     }
 
-    @PostMapping("/location/{locationId}")
+    @PostMapping(value = "/location/{locationId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<Map<String, String>> uploadLocationPhoto(@PathVariable String locationId,
                                                  @RequestParam("file") MultipartFile file,
                                                  @AuthenticationPrincipal User user) {
@@ -73,7 +74,7 @@ public class FileController {
         }
     }
 
-    @PostMapping("/station/{stationId}")
+    @PostMapping(value = "/station/{stationId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<?> uploadStationPhoto(@PathVariable String stationId,
                                                 @RequestParam("file") MultipartFile file,
                                                 @AuthenticationPrincipal User user) {

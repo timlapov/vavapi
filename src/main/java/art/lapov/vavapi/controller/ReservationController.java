@@ -220,7 +220,7 @@ public class ReservationController {
     /**
      * The client receives the reservation receipt in PDF format
      */
-    @GetMapping("/{id}/receipt.pdf")
+    @GetMapping(path = "/{id}/receipt.pdf", produces = MediaType.APPLICATION_PDF_VALUE)
     public ResponseEntity<byte[]> downloadReceipt(@PathVariable String id, @AuthenticationPrincipal User user) {
         byte[] pdf = receiptFacade.buildReceiptPdf(id, user);
         return ResponseEntity.ok()
@@ -233,7 +233,7 @@ public class ReservationController {
      * Export completed reservations as CLIENT to Excel
      * Downloads all past reservations where the user was the client
      */
-    @GetMapping("/export/client-reservations.xlsx")
+    @GetMapping(path = "/export/client-reservations.xlsx", produces = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
     public ResponseEntity<byte[]> exportClientReservations(@AuthenticationPrincipal User client) {
         try {
             byte[] excelFile = xlsxGenerationService.generateClientReservationsReport(client);
@@ -257,7 +257,7 @@ public class ReservationController {
      * Export completed reservations as OWNER to Excel
      * Downloads all past reservations for stations owned by the user
      */
-    @GetMapping("/export/owner-reservations.xlsx")
+    @GetMapping(path = "/export/owner-reservations.xlsx", produces = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
     public ResponseEntity<byte[]> exportOwnerReservations(@AuthenticationPrincipal User owner) {
         try {
             byte[] excelFile = xlsxGenerationService.generateOwnerReservationsReport(owner);

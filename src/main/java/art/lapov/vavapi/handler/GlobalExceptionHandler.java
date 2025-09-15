@@ -1,6 +1,7 @@
 package art.lapov.vavapi.handler;
 
 import art.lapov.vavapi.exception.ResourceNotFoundException;
+import art.lapov.vavapi.exception.UserAlreadyExistsException;
 import art.lapov.vavapi.exception.UserHasActiveReservationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -27,6 +28,11 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
                         "message", ex.getMessage(),
                         "code", "ACTIVE_RESERVATIONS_OR_STATIONS"
                 ));
+    }
+
+    @ExceptionHandler(UserAlreadyExistsException.class)
+    public ResponseEntity<String> handleUserAlreadyExistsException(UserAlreadyExistsException ex) {
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(ex.getMessage());
     }
 
 }
