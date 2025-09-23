@@ -64,8 +64,8 @@ public class AccountService {
         auditLogger.info("User updated password: email={}, userId={}", user.getEmail(), user.getId());
     }
 
-    public void deleteUser(String email) {
-        User user = userRepository.findByEmail(email).orElseThrow();
+    public void deleteUser(String id) {
+        User user = userRepository.findById(id).orElseThrow();
 
         // Check for active reservations as client
         if (userRepository.hasActiveReservations(user.getId())) {
@@ -95,7 +95,7 @@ public class AccountService {
 
 
     public User updateUser(UserUpdateDTO userDto) {
-        User user = userRepository.findByEmail(userDto.getEmail()).orElseThrow();
+        User user = userRepository.findById(userDto.getId()).orElseThrow();
         user.setFirstName(userDto.getFirstName());
         user.setLastName(userDto.getLastName());
         user.setPhone(userDto.getPhone());

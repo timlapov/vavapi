@@ -7,6 +7,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.authorization.AuthorizationDeniedException;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -44,10 +45,12 @@ public class JwtFilter extends OncePerRequestFilter {
             SecurityContextHolder.getContext().setAuthentication(
                     new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities()));
             filterChain.doFilter(request, response);
+        } catch (BadCredentialsException e) {
+            //Si le token n'est pas valide/expiré, on renvoie un 401 unauthorized
+            response.sendError(HttpStatus.UNAUTHORIZED.value(), e.getMessage());
         } catch (AuthorizationDeniedException e) {
-            //Si le token n'est pas valide pour une raison ou une autre, on renvoie un 403 forbidden
+            //Si l'utilisateur n'a pas les droits nécessaires, on renvoie un 403 forbidden
             response.sendError(HttpStatus.FORBIDDEN.value(), e.getMessage());
-
         }
 
     }

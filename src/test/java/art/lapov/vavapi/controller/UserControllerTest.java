@@ -52,6 +52,8 @@ class UserControllerTest {
                 "user-123",
                 "ROLE_USER",
                 "john.doe@example.com",
+                "John",
+                "Doe",
                 "John Doe",
                 "123456789",
                 "123 Main St",
@@ -66,6 +68,7 @@ class UserControllerTest {
         );
 
         updateDTO = new UserUpdateDTO(
+                "user-123",
                 "john.doe@example.com",
                 "John",
                 "Doe",

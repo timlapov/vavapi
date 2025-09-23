@@ -15,6 +15,7 @@ import java.io.Serializable;
  */
 @Value
 public class UserUpdateDTO implements Serializable {
+    String id;
     @Email
     String email;
     @NotBlank

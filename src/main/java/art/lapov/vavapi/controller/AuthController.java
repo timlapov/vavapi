@@ -6,8 +6,9 @@ import art.lapov.vavapi.model.User;
 import art.lapov.vavapi.security.TokenPair;
 import art.lapov.vavapi.service.AuthService;
 import jakarta.validation.Valid;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.apache.tomcat.util.http.SameSiteCookies;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseCookie;
@@ -22,10 +23,13 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
 @RestController
-@AllArgsConstructor
+@RequiredArgsConstructor
 @RequestMapping("/api/")
 public class AuthController {
     private final AuthService authService;
+
+    @Value("${app.secure-cookies}")
+    private boolean secureCookies;
 
     /**
      * Handles user login.
@@ -83,12 +87,24 @@ public class AuthController {
      * @return The response cookie.
      */
     private ResponseCookie generateCookie(String refreshToken) {
-        return ResponseCookie.from("refresh-token", refreshToken)
+        ResponseCookie.ResponseCookieBuilder builder = ResponseCookie
+                .from("refresh-token", refreshToken)
                 .httpOnly(true)
-                .secure(false) // HTTPS TODO
-                .sameSite(SameSiteCookies.NONE.toString())
-                .path("/api/refresh-token")
-                //.maxAge(30 * 24 * 60 * 60)
-                .build();
+//                .path("/api/refresh-token")
+                .path("/api")
+                .maxAge(30 * 24 * 60 * 60); // 30 days
+
+        if (secureCookies) {
+            // for production (HTTPS)
+            builder.secure(true)
+                    .sameSite(SameSiteCookies.NONE.toString());
+        } else {
+            // for development (HTTP)
+            builder.secure(false)
+                    .sameSite(SameSiteCookies.LAX.toString());
+        }
+
+        return builder.build();
     }
+
 }

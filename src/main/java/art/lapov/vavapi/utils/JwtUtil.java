@@ -5,7 +5,7 @@ import com.auth0.jwt.JWT;
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import lombok.AllArgsConstructor;
-import org.springframework.security.authorization.AuthorizationDeniedException;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -22,21 +22,21 @@ public class JwtUtil {
     private KeyManager keyManager;
 
     /**
-     * Génère un JWT contenant l'identifiant du user passé en paramètre
-     * par défaut son temps d'expiration est de 30 minutes
-     * @param user Le User pour lequel on souhaite créer un JWT
-     * @return Le JWT généré
+     * Generates a JWT containing the identifier of the user passed as parameter
+     * Default expiration time is 30 minutes
+     * @param user The User for which to create a JWT
+     * @return The generated JWT
      */
     public String generateToken(UserDetails user) {
         return generateToken(user, Instant.now().plus(30, ChronoUnit.MINUTES));
     }
 
     /**
-     * Génère un JWT contenant l'identifiant du user passé en paramètre
+     * Generates a JWT containing the identifier of the user passed as parameter
      *
-     * @param user Le User pour lequel on souhaite créer un JWT
-     * @param expiration Le temps d'expiration du token
-     * @return Le JWT généré
+     * @param user The User for which to create a JWT
+     * @param expiration The token expiration time
+     * @return The generated JWT
      */
     public String generateToken(UserDetails user, Instant expiration) {
 
@@ -47,11 +47,11 @@ public class JwtUtil {
     }
 
     /**
-     * Méthode pour vérifier la validité d'un token et récupérer le User associé
-     * au token en question
+     * Method to verify the validity of a token and retrieve the User associated
+     * with the token in question
      *
-     * @param token Le token en chaîne de caractères
-     * @return Le User lié au token
+     * @param token The token as a string
+     * @return The User linked to the token
      */
     public UserDetails validateToken(String token) {
         try {
@@ -61,8 +61,10 @@ public class JwtUtil {
                     .verify(token);
             String userIdentifier = decodedJWT.getSubject();
             return userService.loadUserByUsername(userIdentifier);
-        } catch (JWTVerificationException | UsernameNotFoundException e) {
-            throw new AuthorizationDeniedException("Error verifying token");
+        } catch (JWTVerificationException e) {
+            throw new BadCredentialsException("Invalid or expired token", e);
+        } catch (UsernameNotFoundException e) {
+            throw new BadCredentialsException("User not found", e);
         }
     }
 

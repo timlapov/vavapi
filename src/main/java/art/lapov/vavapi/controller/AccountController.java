@@ -1,5 +1,6 @@
 package art.lapov.vavapi.controller;
 
+import art.lapov.vavapi.dto.SimpleMessageDTO;
 import art.lapov.vavapi.dto.UserCreateDTO;
 import art.lapov.vavapi.dto.UserDTO;
 import art.lapov.vavapi.dto.UserUpdateDTO;
@@ -69,26 +70,26 @@ class AccountController {
      * Deletes a user.
      * Only the user themselves can perform this action.
      *
-     * @param email The email of the user to delete.
+     * @param id The email of the user to delete.
      * @param principal The authenticated user.
      * @return A response entity with a success message.
      */
-    @DeleteMapping("/{email}")
-    public ResponseEntity<Void> deleteUser(@AuthenticationPrincipal User principal, @PathVariable String email) {
-        if (!principal.getEmail().equals(email)) {
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteUser(@AuthenticationPrincipal User principal, @PathVariable String id) {
+        if (!principal.getId().equals(id)) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN);
         }
         try {
-            accountService.deleteUser(email);
+            accountService.deleteUser(id);
         } catch (Exception e) {
             throw new UserHasActiveReservationException("User has active reservations on their stations");
         }
         return ResponseEntity.ok().build();
     }
 
-    @PutMapping("/{email}")
-    public UserDTO updateUser(@AuthenticationPrincipal User principal, @PathVariable String email, @RequestBody UserUpdateDTO userDto) {
-        if (!principal.getEmail().equals(email)) {
+    @PutMapping("/{id}")
+    public UserDTO updateUser(@AuthenticationPrincipal User principal, @PathVariable String id, @RequestBody UserUpdateDTO userDto) {
+        if (!principal.getId().equals(id)) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN);
         }
         User user = accountService.updateUser(userDto);
@@ -116,9 +117,9 @@ class AccountController {
      * @return a confirmation message
      */
     @PatchMapping("/password")
-    public String updatePassword(@AuthenticationPrincipal User user, @RequestBody UserUpdatePasswordDTO dto) {
+    public SimpleMessageDTO updatePassword(@AuthenticationPrincipal User user, @RequestBody UserUpdatePasswordDTO dto) {
         accountService.updatePassword(user, dto.getNewPassword());
-        return "Password updated";
+        return new SimpleMessageDTO("Password updated");
     }
 
     @GetMapping("/me")

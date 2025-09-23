@@ -143,9 +143,10 @@ public class SecurityConfig {
         CorsConfiguration configuration = new CorsConfiguration();
 
         // ONLY FOR DEVELOPMENT
-        configuration.setAllowedOriginPatterns(Arrays.asList("*"));
+//        configuration.setAllowedOriginPatterns(Arrays.asList("*"));
+        configuration.setAllowedOrigins(Arrays.asList("http://localhost:4200"));
 
-        // FOR PRODUCTION
+        // TODO FOR PRODUCTION
         // configuration.setAllowedOrigins(Arrays.asList("https://lapov.art"));
 
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
