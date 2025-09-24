@@ -38,4 +38,7 @@ public interface LocationRepository extends JpaRepository<Location, String> {
 
     Page<Location> findAll(Pageable pageable);
 
+    @Query("SELECT l FROM Location l WHERE l.owner.id = :ownerId AND (l.deleted = false OR l.deleted IS NULL)")
+    List<Location> findByOwnerIdAndDeletedIsFalse(@Param("ownerId") String ownerId);
+
 }

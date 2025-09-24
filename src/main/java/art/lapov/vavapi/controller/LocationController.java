@@ -84,4 +84,9 @@ public class LocationController {
         return locationService.findWithinRadius(latitude, longitude, radius);
     }
 
+    @GetMapping("/my")
+    public List<LocationDTO> getMyLocations(@AuthenticationPrincipal User user) {
+        return locationService.findByUserId(user.getId());
+    }
+
 }

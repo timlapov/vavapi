@@ -91,4 +91,11 @@ public class LocationService {
                 .orElse(false);
     }
 
+    public List<LocationDTO> findByUserId(String userId) {
+        List<Location> locations = locationRepository.findByOwnerIdAndDeletedIsFalse(userId);
+        return locations.stream()
+                .map(locationMapper::map)
+                .toList();
+    }
+
 }
