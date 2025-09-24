@@ -4,6 +4,7 @@ import art.lapov.vavapi.dto.LocationCreateDTO;
 import art.lapov.vavapi.dto.LocationDTO;
 import art.lapov.vavapi.dto.LocationUpdateDTO;
 import art.lapov.vavapi.dto.StationDTO;
+import art.lapov.vavapi.exception.LocationHasActiveStationsException;
 import art.lapov.vavapi.exception.ResourceNotFoundException;
 import art.lapov.vavapi.mapper.LocationMapper;
 import art.lapov.vavapi.mapper.StationMapper;
@@ -56,7 +57,11 @@ public class LocationService {
     public void delete(String id) {
         Location location = locationRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Location not found with id: " + id));
-        // TODO: check if location has stations
+
+        if (stationRepository.existsActiveStationsByLocationId(id)) {
+            throw new LocationHasActiveStationsException("Cannot delete location: it has active stations");
+        }
+
         location.setDeleted(true);
         locationRepository.save(location);
     }

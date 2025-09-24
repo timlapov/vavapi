@@ -130,4 +130,11 @@ public interface ReservationRepository extends JpaRepository<Reservation, String
             "ORDER BY r.endDate DESC")
     List<Reservation> findCompletedReservationsForClient(@Param("client") User client);
 
+    /**
+     * Check if location has any active reservations
+     */
+    @Query("SELECT COUNT(r) > 0 FROM Reservation r WHERE r.station.location.id = :locationId " +
+            "AND r.status IN ('CREATED', 'ACCEPTED', 'PAID')")
+    boolean existsActiveReservationsByLocationId(@Param("locationId") String locationId);
+
 }

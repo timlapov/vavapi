@@ -1,5 +1,6 @@
 package art.lapov.vavapi.handler;
 
+import art.lapov.vavapi.exception.LocationHasActiveStationsException;
 import art.lapov.vavapi.exception.ResourceNotFoundException;
 import art.lapov.vavapi.exception.UserAlreadyExistsException;
 import art.lapov.vavapi.exception.UserHasActiveReservationException;
@@ -33,6 +34,11 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     @ExceptionHandler(UserAlreadyExistsException.class)
     public ResponseEntity<String> handleUserAlreadyExistsException(UserAlreadyExistsException ex) {
         return ResponseEntity.status(HttpStatus.CONFLICT).body(ex.getMessage());
+    }
+
+    @ExceptionHandler(LocationHasActiveStationsException.class)
+    public ResponseEntity<String> handleLocationHasActiveStationsException(LocationHasActiveStationsException ex) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
     }
 
 }
