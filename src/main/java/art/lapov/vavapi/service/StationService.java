@@ -15,6 +15,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -79,16 +80,6 @@ public class StationService {
                 .toList();
     }
 
-    public Page<StationDTO> findAvailable(Pageable pageable) {
-        return stationRepository.findAll(pageable)
-                .map(stationMapper::map)
-                .map(dto -> {
-                    // Add logic here to check if station is actually available
-                    // based on reservations, enabled status, etc.
-                    return dto;
-                });
-    }
-
     public boolean isOwner(String stationId, String userId) {
         return stationRepository.findById(stationId)
                 .map(station -> station.getLocation().getOwner().getId().equals(userId))
@@ -100,6 +91,13 @@ public class StationService {
                 .orElseThrow(() -> new RuntimeException("Station not found with id: " + stationId));
         station.setPhotoUrl(fileName);
         stationRepository.save(station);
+    }
+
+    public List<StationDTO> findAvailableByLocationAndPeriod(String locationId, LocalDateTime startDate, LocalDateTime endDate) {
+        return stationRepository.findAvailableStationsByLocationAndPeriod(locationId, startDate, endDate)
+                .stream()
+                .map(stationMapper::map)
+                .toList();
     }
 
 }

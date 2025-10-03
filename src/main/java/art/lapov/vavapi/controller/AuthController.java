@@ -2,6 +2,7 @@ package art.lapov.vavapi.controller;
 
 import art.lapov.vavapi.dto.LoginCredentialsDTO;
 import art.lapov.vavapi.dto.LoginResponseDTO;
+import art.lapov.vavapi.dto.SimpleMessageDTO;
 import art.lapov.vavapi.model.User;
 import art.lapov.vavapi.security.TokenPair;
 import art.lapov.vavapi.service.AuthService;
@@ -56,13 +57,18 @@ public class AuthController {
      * @return A response entity containing the new access token.
      */
     @PostMapping("refresh-token")
-    public ResponseEntity<String> refreshToken(@CookieValue(name = "refresh-token") String token) {
+    public ResponseEntity<SimpleMessageDTO> refreshToken(
+            @CookieValue(name = "refresh-token", required = false) String token) {
+        if (token == null) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Refresh token cookie not found");
+        }
+
         try {
             TokenPair tokens = authService.validateRefreshToken(token);
             ResponseCookie refreshCookie = generateCookie(tokens.getRefreshToken());
             return ResponseEntity.ok()
                     .header(HttpHeaders.SET_COOKIE, refreshCookie.toString())
-                    .body(tokens.getJwt());
+                    .body(new SimpleMessageDTO(tokens.getJwt()));
         } catch (Exception e) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Invalid refresh token");
         }
@@ -76,7 +82,6 @@ public class AuthController {
      */
     @GetMapping("protected")
     public String protec(@AuthenticationPrincipal User user) {
-        System.out.println("hola");
         return user.getEmail();
     }
 

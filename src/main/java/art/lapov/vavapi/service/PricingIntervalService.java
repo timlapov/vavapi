@@ -194,10 +194,11 @@ public class PricingIntervalService {
                     "Start hour and end hour are required");
         }
 
-        if (startHour.equals(endHour)) {
+        if (startHour.equals(endHour) && !startHour.equals(LocalTime.MIDNIGHT)) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
-                    "Start hour and end hour cannot be the same");
+                    "Start hour and end hour cannot be the same (except for 00:00-00:00 full-day intervals)");
         }
+
 
         // For simplicity in MVP, we don't allow intervals that cross midnight
         if (startHour.isAfter(endHour)) {

@@ -36,4 +36,24 @@ public interface StationRepository extends JpaRepository<Station, String> {
             "AND (s.deleted = false OR s.deleted IS NULL)")
     boolean existsActiveStationsByLocationId(@Param("locationId") String locationId);
 
+    /**
+     * Find available stations in a location for a specific time period
+     * A station is available if it's enabled, not deleted, and has no active reservations in the period
+     */
+    @Query("SELECT s FROM Station s " +
+            "WHERE s.location.id = :locationId " +
+            "AND s.enabled = true " +
+            "AND (s.deleted = false OR s.deleted IS NULL) " +
+            "AND NOT EXISTS (" +
+            "  SELECT r FROM Reservation r " +
+            "  WHERE r.station.id = s.id " +
+            "  AND r.startDate < :endDate " +
+            "  AND r.endDate > :startDate " +
+            "  AND r.status IN ('ACCEPTED', 'PAID', 'COMPLETED')" +
+            ")")
+    List<Station> findAvailableStationsByLocationAndPeriod(
+            @Param("locationId") String locationId,
+            @Param("startDate") java.time.LocalDateTime startDate,
+            @Param("endDate") java.time.LocalDateTime endDate);
+
 }
