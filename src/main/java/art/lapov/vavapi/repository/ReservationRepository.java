@@ -77,6 +77,15 @@ public interface ReservationRepository extends JpaRepository<Reservation, String
             Pageable pageable);
 
     /**
+     * Find all reservations for station owner (past and current, all statuses)
+     */
+    @Query("SELECT r FROM Reservation r WHERE r.station.location.owner = :owner " +
+            "ORDER BY r.createdAt DESC")
+    Page<Reservation> findOwnerReservationHistory(
+            @Param("owner") User owner,
+            Pageable pageable);
+
+    /**
      * Find reservations that should be automatically completed
      */
     @Query("SELECT r FROM Reservation r WHERE r.endDate < :now " +

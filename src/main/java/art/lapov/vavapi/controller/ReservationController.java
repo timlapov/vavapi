@@ -206,6 +206,22 @@ public class ReservationController {
     }
 
     /**
+     * Get all reservations for station owner (history with all statuses)
+     */
+    @GetMapping("/owner-history")
+    public Page<ReservationDTO> getOwnerReservationHistory(
+            @AuthenticationPrincipal User user,
+            @RequestParam(defaultValue = "1") Integer page,
+            @RequestParam(defaultValue = "20") Integer size) {
+
+        if (size > 50) size = 50;
+        if (page < 1) page = 1;
+        Pageable pageable = PageRequest.of(page - 1, size);
+
+        return reservationService.getOwnerReservationHistory(user, pageable);
+    }
+
+    /**
      * Process payment for an accepted reservation
      * Client pays after owner accepts the reservation
      */

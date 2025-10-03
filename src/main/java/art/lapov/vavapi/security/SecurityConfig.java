@@ -93,6 +93,7 @@ public class SecurityConfig {
                 .requestMatchers(HttpMethod.GET, "/api/reservations/my").authenticated()
                 .requestMatchers(HttpMethod.GET, "/api/reservations/upcoming").authenticated()
                 .requestMatchers(HttpMethod.GET, "/api/reservations/history").authenticated()
+                .requestMatchers(HttpMethod.GET, "/api/reservations/owner-history").authenticated()
                 .requestMatchers(HttpMethod.GET, "/api/reservations/pending-approval").authenticated()
                 .requestMatchers(HttpMethod.GET, "/api/reservations/station/**").authenticated()
                 .requestMatchers(HttpMethod.GET, "/api/reservations/**").authenticated()

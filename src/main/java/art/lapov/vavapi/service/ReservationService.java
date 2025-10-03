@@ -87,7 +87,7 @@ public class ReservationService {
         mailService.sendNewReservationRequest(station.getLocation().getOwner(), saved);
 
         // 9. Send confirmation to client that request was received
-        mailService.sendReservationRequestReceived(client, saved);
+        //mailService.sendReservationRequestReceived(client, saved); //TODO Disabled due to mailtrap limits
 
         return reservationMapper.map(saved);
     }
@@ -407,6 +407,11 @@ public class ReservationService {
 
     public Page<ReservationDTO> getPastReservations(User user, Pageable pageable) {
         return reservationRepository.findPastReservations(user, LocalDateTime.now(), pageable)
+                .map(reservationMapper::map);
+    }
+
+    public Page<ReservationDTO> getOwnerReservationHistory(User owner, Pageable pageable) {
+        return reservationRepository.findOwnerReservationHistory(owner, pageable)
                 .map(reservationMapper::map);
     }
 
