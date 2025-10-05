@@ -2,7 +2,6 @@ package art.lapov.vavapi.controller;
 
 import art.lapov.vavapi.dto.AvailabilityResponseDTO;
 import art.lapov.vavapi.dto.PaymentDetailsDTO;
-import art.lapov.vavapi.dto.RejectReasonDTO;
 import art.lapov.vavapi.dto.ReservationCreateDTO;
 import art.lapov.vavapi.dto.ReservationDTO;
 import art.lapov.vavapi.model.User;
@@ -126,11 +125,8 @@ public class ReservationController {
     @PutMapping("/{id}/reject")
     public ReservationDTO rejectReservation(
             @PathVariable String id,
-            @AuthenticationPrincipal User owner,
-            @RequestBody(required = false) RejectReasonDTO reasonDto) {
-
-        String reason = reasonDto != null ? reasonDto.getReason() : "No reason provided";
-        return reservationService.rejectReservation(id, owner, reason);
+            @AuthenticationPrincipal User owner) {
+        return reservationService.rejectReservation(id, owner);
     }
 
     /**

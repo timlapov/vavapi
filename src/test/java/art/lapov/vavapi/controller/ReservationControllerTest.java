@@ -246,7 +246,7 @@ class ReservationControllerTest {
 
     @Test
     @WithMockUser
-    void rejectReservation_WithReason() throws Exception {
+    void rejectReservation_Success() throws Exception {
         ReservationDTO rejectedDTO = new ReservationDTO(
                 "res-123",
                 ReservationStatus.REJECTED,
@@ -262,40 +262,7 @@ class ReservationControllerTest {
                 null
         );
 
-        RejectReasonDTO reasonDTO = new RejectReasonDTO("Station under maintenance");
-
-        when(reservationService.rejectReservation(anyString(), any(User.class), anyString()))
-                .thenReturn(rejectedDTO);
-
-        mockMvc.perform(put("/api/reservations/res-123/reject")
-                        .with(user(mockUser))
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(reasonDTO)))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.status").value("REJECTED"));
-
-        verify(reservationService).rejectReservation(eq("res-123"), eq(mockUser), eq("Station under maintenance"));
-    }
-
-    @Test
-    @WithMockUser
-    void rejectReservation_WithoutReason() throws Exception {
-        ReservationDTO rejectedDTO = new ReservationDTO(
-                "res-123",
-                ReservationStatus.REJECTED,
-                LocalDateTime.now().plusDays(1),
-                LocalDateTime.now().plusDays(2),
-                5000,
-                LocalDateTime.now(),
-                null,
-                null,
-                createStationShortDTO(),
-                createUserShortDTO(),
-                null,
-                null
-        );
-
-        when(reservationService.rejectReservation(anyString(), any(User.class), anyString()))
+        when(reservationService.rejectReservation(anyString(), any(User.class)))
                 .thenReturn(rejectedDTO);
 
         mockMvc.perform(put("/api/reservations/res-123/reject")
@@ -303,7 +270,7 @@ class ReservationControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.status").value("REJECTED"));
 
-        verify(reservationService).rejectReservation(eq("res-123"), eq(mockUser), eq("No reason provided"));
+        verify(reservationService).rejectReservation(eq("res-123"), eq(mockUser));
     }
 
     // ============= CANCEL RESERVATION TESTS =============

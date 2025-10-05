@@ -72,8 +72,8 @@ class MailService {
         }
     }
 
-    // Notify client that reservation was rejected by the owner (optionally include a reason)
-    public void sendReservationRejected(User client, Reservation updated, String reason) {
+    // Notify client that reservation was rejected by the owner
+    public void sendReservationRejected(User client, Reservation updated) {
         Context ctx = new Context();
 
         ctx.setVariable("name", client.getFirstName());
@@ -81,9 +81,6 @@ class MailService {
         ctx.setVariable("startDate", updated.getStartDate());
         ctx.setVariable("endDate", updated.getEndDate());
         ctx.setVariable("reservationId", updated.getId());
-
-        // Optional 'reason' shown only if not empty (handled by template)
-        ctx.setVariable("reason", reason);
 
         String linkToDashboard = frontBaseUrl + "/dashboard";
         ctx.setVariable("linkToDashboard", linkToDashboard);

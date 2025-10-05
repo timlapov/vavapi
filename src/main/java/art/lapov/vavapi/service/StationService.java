@@ -25,6 +25,7 @@ public class StationService {
     private final StationRepository stationRepository;
     private final LocationRepository locationRepository;
     private final StationMapper stationMapper;
+    private final PricingIntervalService pricingIntervalService;
 
     public Page<StationDTO> findAll(Pageable pageable) {
         return stationRepository.findAll(pageable)
@@ -96,6 +97,7 @@ public class StationService {
     public List<StationDTO> findAvailableByLocationAndPeriod(String locationId, LocalDateTime startDate, LocalDateTime endDate) {
         return stationRepository.findAvailableStationsByLocationAndPeriod(locationId, startDate, endDate)
                 .stream()
+                .filter(station -> pricingIntervalService.isStationAvailable(station.getId(), startDate, endDate))
                 .map(stationMapper::map)
                 .toList();
     }

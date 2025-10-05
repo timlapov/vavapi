@@ -210,7 +210,7 @@ public class ReservationService {
      * No refund needed as payment hasn't been made yet
      */
     @Transactional
-    public ReservationDTO rejectReservation(String reservationId, User owner, String reason) {
+    public ReservationDTO rejectReservation(String reservationId, User owner) {
         Reservation reservation = reservationRepository.findById(reservationId)
                 .orElseThrow(() -> new ResourceNotFoundException("Reservation not found"));
 
@@ -231,8 +231,8 @@ public class ReservationService {
 
         Reservation updated = reservationRepository.save(reservation);
 
-        // Notify client with reason
-        mailService.sendReservationRejected(reservation.getClient(), updated, reason);
+        // Notify client
+        mailService.sendReservationRejected(reservation.getClient(), updated);
 
         return reservationMapper.map(updated);
     }
@@ -351,16 +351,16 @@ public class ReservationService {
                     "Cannot make reservations in the past");
         }
 
-        // Minimum reservation duration (1 hour)
-        if (startDate.plusHours(1).isAfter(endDate)) {
+        // Minimum reservation duration (59 minutes)
+        if (startDate.plusMinutes(59).isAfter(endDate)) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
-                    "Minimum reservation duration is 1 hour");
+                    "Minimum reservation duration is 59 minutes");
         }
 
-        // Maximum reservation duration (7 days for MVP)
-        if (startDate.plusDays(7).isBefore(endDate)) {
+        // For MVP: reservations cannot cross midnight (must be within same day)
+        if (!startDate.toLocalDate().equals(endDate.toLocalDate())) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
-                    "Maximum reservation duration is 7 days");
+                    "Reservations cannot span multiple days. Please create separate reservations for each day.");
         }
     }
 

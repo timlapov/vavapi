@@ -125,10 +125,6 @@
                     <th>ID de réservation</th>
                     <td th:text="${reservationId}">R-123456</td>
                 </tr>
-                <tr th:if="${#strings.isNotEmpty(reason)}">
-                    <th>Motif</th>
-                    <td th:text="${reason}">Indisponibilité de la station</td>
-                </tr>
             </table>
         </div>
 
