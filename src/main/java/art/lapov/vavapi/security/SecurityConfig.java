@@ -126,6 +126,7 @@ public class SecurityConfig {
                 .requestMatchers("/uploads/**").permitAll()  // Public access to uploaded images
                 .requestMatchers("/css/**", "/js/**", "/images/**").permitAll()  // Static resources
                 .requestMatchers("/favicon.ico").permitAll()
+                .requestMatchers("/reset-password.html").permitAll()  // Password reset page
 
                 // ============= API DOCUMENTATION =============
                 .requestMatchers("/api-docs/**").permitAll()

@@ -51,7 +51,7 @@ class MailService {
     }
 
     public void sendResetPassword(User user, String token) {
-        String link = ServletUriComponentsBuilder.fromCurrentContextPath().toUriString()+"/reset-password.html?token="+token;
+        String link = frontBaseUrl+"/reset-password/"+token;
 
         Context ctx = new Context();
         ctx.setVariable("resetPasswordLink", link);

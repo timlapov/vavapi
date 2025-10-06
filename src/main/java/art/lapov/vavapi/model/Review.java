@@ -42,6 +42,7 @@ public class Review implements BaseEntity {
     private User author;
 
     @OneToOne(fetch = FetchType.LAZY)
+    @jakarta.persistence.JoinColumn(name = "reservation_id", unique = true)
     private Reservation reservation;
 
     public Station getStation() {

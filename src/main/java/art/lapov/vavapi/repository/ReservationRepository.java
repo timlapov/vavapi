@@ -68,7 +68,7 @@ public interface ReservationRepository extends JpaRepository<Reservation, String
     /**
      * Find past reservations for a user
      */
-    @Query("SELECT r FROM Reservation r WHERE r.client = :client " +
+    @Query("SELECT r FROM Reservation r LEFT JOIN FETCH r.review WHERE r.client = :client " +
             "AND r.endDate < :now " +
             "ORDER BY r.endDate DESC")
     Page<Reservation> findPastReservations(
@@ -79,7 +79,7 @@ public interface ReservationRepository extends JpaRepository<Reservation, String
     /**
      * Find all reservations for station owner (past and current, all statuses)
      */
-    @Query("SELECT r FROM Reservation r WHERE r.station.location.owner = :owner " +
+    @Query("SELECT r FROM Reservation r LEFT JOIN FETCH r.review WHERE r.station.location.owner = :owner " +
             "ORDER BY r.createdAt DESC")
     Page<Reservation> findOwnerReservationHistory(
             @Param("owner") User owner,
@@ -111,7 +111,7 @@ public interface ReservationRepository extends JpaRepository<Reservation, String
     /**
      * Find upcoming reservations for a user with pagination
      */
-    @Query("SELECT r FROM Reservation r WHERE r.client = :client " +
+    @Query("SELECT r FROM Reservation r LEFT JOIN FETCH r.review WHERE r.client = :client " +
             "AND r.startDate > :now " +
             "AND r.status IN ('CREATED', 'ACCEPTED', 'PAID') " +
             "ORDER BY r.startDate ASC")
@@ -120,7 +120,7 @@ public interface ReservationRepository extends JpaRepository<Reservation, String
             @Param("now") LocalDateTime now,
             Pageable pageable);
 
-    @Query("SELECT r FROM Reservation r JOIN r.station s WHERE r.id = :id AND r.client.id = :userId")
+    @Query("SELECT r FROM Reservation r LEFT JOIN FETCH r.review JOIN r.station s WHERE r.id = :id AND r.client.id = :userId")
     Optional<Reservation> findVisibleToUser(String id, String userId);
 
     /**

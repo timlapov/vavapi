@@ -22,6 +22,9 @@ import org.mapstruct.ReportingPolicy;
 )
 public abstract class ReservationMapper {
     public abstract Reservation map(ReservationCreateDTO dto);
+
+    @Mapping(source = "review.id", target = "reviewId")
+    @Mapping(source = "review.rating", target = "reviewRating")
     public abstract ReservationDTO map(Reservation model);
     //public abstract void update(ReservationUpdateDTO dto, @MappingTarget Reservation model);
 }

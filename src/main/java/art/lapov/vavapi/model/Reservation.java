@@ -51,6 +51,6 @@ public class Reservation implements BaseEntity {
     private Station station;
     @OneToOne
     private Payment payment;
-    @OneToOne
+    @OneToOne(mappedBy = "reservation")
     private Review review;
 }

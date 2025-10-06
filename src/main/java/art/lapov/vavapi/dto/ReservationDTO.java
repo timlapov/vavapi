@@ -27,6 +27,7 @@ public class ReservationDTO implements Serializable {
     UserShortDTO client;
     PaymentDTO payment;
     String reviewId;
+    Integer reviewRating;
 
     @JsonProperty("total_cost_euros")
     public Double getTotalCostEuros() {

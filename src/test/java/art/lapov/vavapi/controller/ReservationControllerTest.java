@@ -77,6 +77,7 @@ class ReservationControllerTest {
                 createStationShortDTO(),
                 createUserShortDTO(),
                 null,
+                null,
                 null
         );
 
@@ -229,6 +230,7 @@ class ReservationControllerTest {
                 createStationShortDTO(),
                 createUserShortDTO(),
                 null,
+                null,
                 null
         );
 
@@ -258,6 +260,7 @@ class ReservationControllerTest {
                 null,
                 createStationShortDTO(),
                 createUserShortDTO(),
+                null,
                 null,
                 null
         );
@@ -318,6 +321,7 @@ class ReservationControllerTest {
                 createStationShortDTO(),
                 createUserShortDTO(),
                 createPaymentDTO(),
+                null,
                 null
         );
 
@@ -436,6 +440,7 @@ class ReservationControllerTest {
                 createStationShortDTO(),
                 createUserShortDTO(),
                 null,
+                null,
                 null
         );
 
@@ -478,6 +483,7 @@ class ReservationControllerTest {
                 null,
                 createStationShortDTO(),
                 createUserShortDTO(),
+                null,
                 null,
                 null
         );
