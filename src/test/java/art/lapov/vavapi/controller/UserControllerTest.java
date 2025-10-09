@@ -81,7 +81,7 @@ class UserControllerTest {
     }
 
     @Test
-    @WithMockUser(roles = "ROLE_ADMIN")
+    @WithMockUser(roles = "ADMIN")
     void getAllUsers_Success() throws Exception {
         Page<UserDTO> page = new PageImpl<>(
                 Arrays.asList(sampleUserDTO),
@@ -100,7 +100,7 @@ class UserControllerTest {
     }
 
     @Test
-    @WithMockUser(roles = "ROLE_ADMIN")
+    @WithMockUser(roles = "ADMIN")
     void getUserById_Success() throws Exception {
         when(userService.getUserById(anyString())).thenReturn(sampleUserDTO);
 
@@ -110,7 +110,7 @@ class UserControllerTest {
     }
 
     @Test
-    @WithMockUser(roles = "ROLE_ADMIN")
+    @WithMockUser(roles = "ADMIN")
     void updateUser_Success() throws Exception {
         when(userService.updateUser(anyString(), any(UserUpdateDTO.class))).thenReturn(sampleUserDTO);
 
@@ -124,14 +124,14 @@ class UserControllerTest {
     }
 
     @Test
-    @WithMockUser(roles = "ROLE_ADMIN")
+    @WithMockUser(roles = "ADMIN")
     void deleteUser_Success() throws Exception {
         mockMvc.perform(delete("/api/users/user-123"))
                 .andExpect(status().isNoContent());
     }
 
     @Test
-    @WithMockUser(roles = "ROLE_ADMIN")
+    @WithMockUser(roles = "ADMIN")
     void toggleUserStatus_Success() throws Exception {
         when(userService.toggleUserStatus(anyString())).thenReturn(sampleUserDTO);
 
@@ -141,7 +141,7 @@ class UserControllerTest {
     }
 
     @Test
-    @WithMockUser(roles = "ROLE_ADMIN")
+    @WithMockUser(roles = "ADMIN")
     void resetUserPassword_Success() throws Exception {
         when(userService.resetUserPassword(anyString())).thenReturn("Password reset successfully. New password sent to user's email.");
 
@@ -151,7 +151,7 @@ class UserControllerTest {
     }
 
     @Test
-    @WithMockUser(roles = "ROLE_ADMIN")
+    @WithMockUser(roles = "ADMIN")
     void getUsersByRole_Success() throws Exception {
         Page<UserDTO> page = new PageImpl<>(
                 Arrays.asList(sampleUserDTO),
@@ -170,7 +170,7 @@ class UserControllerTest {
     }
 
     @Test
-    @WithMockUser(roles = "ROLE_ADMIN")
+    @WithMockUser(roles = "ADMIN")
     void searchUsers_Success() throws Exception {
         Page<UserDTO> page = new PageImpl<>(
                 Arrays.asList(sampleUserDTO),
