@@ -72,7 +72,7 @@ class PricingIntervalServiceTest {
 
     @Test
     void calculateCost_MultipleIntervals_SameDay() {
-        // Given: утренний тариф 15€/час, вечерний 25€/час
+        // Given: morning time 15€/hour, evening time 25€/hour
         PricingInterval morning = createPricingInterval(
                 LocalTime.of(6, 0),
                 LocalTime.of(12, 0),
