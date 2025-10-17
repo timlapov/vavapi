@@ -1,0 +1,57 @@
+# IDE files
+.idea/
+*.iml
+*.iws
+*.ipr
+.vscode/
+.settings/
+.project
+.classpath
+
+# Build directories
+target/
+build/
+out/
+bin/
+
+# Logs
+logs/
+*.log
+
+# Test files
+src/test/
+
+# Git files
+.git/
+.gitignore
+.gitattributes
+
+# Documentation
+README.md
+*.md
+docs/
+
+# Environment files (IMPORTANT: Never include these in Docker image)
+environment/
+*.env
+.env.*
+env.properties
+
+# Temporary files
+*.tmp
+*.bak
+*.swp
+*~
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# CI/CD files
+.github/
+docker-compose*.yml
+Dockerfile
+.dockerignore
+
+# Uploads directory (will be mounted as volume)
+uploads/
