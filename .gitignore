@@ -31,3 +31,16 @@ build/
 
 ### VS Code ###
 .vscode/
+
+### Application Specific ###
+# Environment files (IMPORTANT: Never commit secrets!)
+.env
+.env.*
+environment/
+
+# Logs
+logs/
+*.log
+
+# Uploads
+uploads/
