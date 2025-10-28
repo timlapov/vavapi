@@ -90,23 +90,25 @@ jobs:
             echo "Starting new container..."
             docker compose up -d
             
-            # Wait for application to be ready and perform health check with retry
-            echo "Waiting for application to start..."
+            # Wait for Docker container to become healthy
+            echo "Waiting for application to start (start_period: 40s + retries)..."
+            sleep 45
+
             MAX_RETRIES=12
-            RETRY_COUNT=0
             HEALTH_CHECK_PASSED=false
 
-            while [ $RETRY_COUNT -lt $MAX_RETRIES ]; do
-              echo "Health check attempt $((RETRY_COUNT + 1))/$MAX_RETRIES..."
+            for i in $(seq 1 $MAX_RETRIES); do
+              echo "Health check attempt $i/$MAX_RETRIES..."
 
-              if curl -f --max-time 5 --connect-timeout 3 https://vavapi.lapov.art/actuator/health > /dev/null 2>&1; then
+              CONTAINER_HEALTH=$(docker inspect --format='{{.State.Health.Status}}' vavapi 2>/dev/null || echo "unhealthy")
+              echo "Container status: $CONTAINER_HEALTH"
+
+              if [ "$CONTAINER_HEALTH" = "healthy" ]; then
                 HEALTH_CHECK_PASSED=true
                 break
               fi
 
-              RETRY_COUNT=$((RETRY_COUNT + 1))
-              if [ $RETRY_COUNT -lt $MAX_RETRIES ]; then
-                echo "Application not ready yet, waiting 10 seconds..."
+              if [ $i -lt $MAX_RETRIES ]; then
                 sleep 10
               fi
             done
