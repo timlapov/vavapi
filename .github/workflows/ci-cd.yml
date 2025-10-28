@@ -91,8 +91,8 @@ jobs:
             docker compose up -d
             
             # Wait for Docker container to become healthy
-            echo "Waiting for application to start (start_period: 90s + retries)..."
-            sleep 95
+            echo "Waiting for application to start (start_period: 60s + retries)..."
+            sleep 65
 
             MAX_RETRIES=12
             HEALTH_CHECK_PASSED=false

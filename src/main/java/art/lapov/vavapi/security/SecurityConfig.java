@@ -135,6 +135,7 @@ public class SecurityConfig {
 
                 // ============= ACTUATOR (MONITORING) =============
                 .requestMatchers("/actuator/health").permitAll()
+                .requestMatchers("/actuator/health/**").permitAll()  // Includes /liveness, /readiness
                 .requestMatchers("/actuator/info").permitAll()
 
                 .anyRequest().denyAll());
