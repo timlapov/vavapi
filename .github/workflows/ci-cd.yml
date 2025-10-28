@@ -90,13 +90,28 @@ jobs:
             echo "Starting new container..."
             docker compose up -d
             
-            # Wait for application to be ready
+            # Wait for application to be ready and perform health check with retry
             echo "Waiting for application to start..."
-            sleep 30
-            
-            # Health check
-            echo "Performing health check..."
-            if curl -f https://vavapi.lapov.art/actuator/health; then
+            MAX_RETRIES=12
+            RETRY_COUNT=0
+            HEALTH_CHECK_PASSED=false
+
+            while [ $RETRY_COUNT -lt $MAX_RETRIES ]; do
+              echo "Health check attempt $((RETRY_COUNT + 1))/$MAX_RETRIES..."
+
+              if curl -f --max-time 5 --connect-timeout 3 http://localhost:8081/actuator/health > /dev/null 2>&1; then
+                HEALTH_CHECK_PASSED=true
+                break
+              fi
+
+              RETRY_COUNT=$((RETRY_COUNT + 1))
+              if [ $RETRY_COUNT -lt $MAX_RETRIES ]; then
+                echo "Application not ready yet, waiting 10 seconds..."
+                sleep 10
+              fi
+            done
+
+            if [ "$HEALTH_CHECK_PASSED" = true ]; then
               echo "✅ Application is healthy!"
               
               # Remove old image if exists and different from current
