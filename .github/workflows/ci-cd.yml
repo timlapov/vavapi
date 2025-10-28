@@ -3,8 +3,6 @@ name: CI/CD Pipeline (Build on VPS)
 on:
   push:
     branches: [ main, develop ]
-    tags:
-      - 'v*'
   pull_request:
     branches: [ main ]
 
@@ -60,7 +58,7 @@ jobs:
             echo "Starting deployment..."
             
             # Navigate to application directory
-            cd ~/vavapi
+            cd /var/www/fastuser/data/www/vavapi.lapov.art
             
             # Save current version for potential rollback
             CURRENT_VERSION=$(docker images vavapi:current -q 2>/dev/null || echo "none")
