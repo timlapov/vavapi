@@ -99,7 +99,7 @@ jobs:
             while [ $RETRY_COUNT -lt $MAX_RETRIES ]; do
               echo "Health check attempt $((RETRY_COUNT + 1))/$MAX_RETRIES..."
 
-              if curl -f --max-time 5 --connect-timeout 3 http://localhost:8081/actuator/health > /dev/null 2>&1; then
+              if curl -f --max-time 5 --connect-timeout 3 https://vavapi.lapov.art/actuator/health > /dev/null 2>&1; then
                 HEALTH_CHECK_PASSED=true
                 break
               fi
