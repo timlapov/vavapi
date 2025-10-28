@@ -3,8 +3,7 @@ services:
     image: vavapi:current
     container_name: vavapi
     restart: unless-stopped
-    ports:
-      - "8081:8081"
+    network_mode: host
     environment:
       # Database
       MYSQL_HOST: ${MYSQL_HOST}
@@ -39,13 +38,6 @@ services:
       # JWT Keys - монтируем директорию с ключами
       - ./environment:/app/keys:ro
 
-    networks:
-      - vavapi-network
-
-    # Позволяет контейнеру обращаться к хосту через host.docker.internal
-    extra_hosts:
-      - "host.docker.internal:host-gateway"
-
     healthcheck:
       test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:8081/actuator/health"]
       interval: 30s
@@ -58,7 +50,3 @@ services:
       options:
         max-size: "10m"
         max-file: "3"
-
-networks:
-  vavapi-network:
-    driver: bridge
