@@ -91,8 +91,8 @@ jobs:
             docker compose up -d
             
             # Wait for Docker container to become healthy
-            echo "Waiting for application to start (start_period: 40s + retries)..."
-            sleep 45
+            echo "Waiting for application to start (start_period: 90s + retries)..."
+            sleep 95
 
             MAX_RETRIES=12
             HEALTH_CHECK_PASSED=false
@@ -106,6 +106,13 @@ jobs:
               if [ "$CONTAINER_HEALTH" = "healthy" ]; then
                 HEALTH_CHECK_PASSED=true
                 break
+              fi
+
+              # Show last 20 lines of container logs for debugging
+              if [ "$CONTAINER_HEALTH" = "unhealthy" ] || [ $i -eq $MAX_RETRIES ]; then
+                echo "--- Container logs (last 20 lines) ---"
+                docker logs --tail 20 vavapi 2>&1 || echo "Could not fetch logs"
+                echo "--- End of logs ---"
               fi
 
               if [ $i -lt $MAX_RETRIES ]; then
