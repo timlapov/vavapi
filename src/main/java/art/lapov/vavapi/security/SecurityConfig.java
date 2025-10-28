@@ -1,7 +1,8 @@
 package art.lapov.vavapi.security;
 
 import art.lapov.vavapi.utils.JwtUtil;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -20,10 +21,11 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
-import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
 @Configuration
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class SecurityConfig {
 
     private final UserDetailsService userDetailsService;
@@ -31,6 +33,9 @@ public class SecurityConfig {
     private final AuthenticationConfiguration authenticationConfiguration;
     private final JwtUtil jwtUtil;
     private final JwtFilter jwtFilter;
+
+    @Value("${app.frontend.base-url}")
+    private String frontendBaseUrl;
 
     @Bean
     SecurityFilterChain securityFilter(HttpSecurity http) throws Exception {
@@ -149,15 +154,13 @@ public class SecurityConfig {
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
 
-        // ONLY FOR DEVELOPMENT
-//        configuration.setAllowedOriginPatterns(Arrays.asList("*"));
-        configuration.setAllowedOrigins(Arrays.asList("http://localhost:4200"));
+        // Dynamically configured based on environment:
+        // Dev: http://localhost:4200
+        // Prod: https://vav.lapov.art
+        configuration.setAllowedOrigins(Collections.singletonList(frontendBaseUrl));
 
-        // TODO FOR PRODUCTION
-        // configuration.setAllowedOrigins(Arrays.asList("https://lapov.art"));
-
-        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
-        configuration.setAllowedHeaders(Arrays.asList("*"));
+        configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
+        configuration.setAllowedHeaders(List.of("*"));
         configuration.setAllowCredentials(true);
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
