@@ -35,7 +35,7 @@ services:
 
     volumes:
       - ./uploads:/app/uploads
-      # JWT Keys - монтируем директорию с ключами
+      # JWT Keys
       - ./environment:/app/keys:ro
 
     healthcheck:

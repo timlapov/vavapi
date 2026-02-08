@@ -2,7 +2,6 @@ package art.lapov.vavapi.mapper;
 
 import art.lapov.vavapi.model.BaseEntity;
 import jakarta.persistence.EntityManager;
-import lombok.AllArgsConstructor;
 import org.mapstruct.Mapper;
 import org.mapstruct.MappingConstants;
 import org.mapstruct.TargetType;

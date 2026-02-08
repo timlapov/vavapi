@@ -25,7 +25,7 @@ public class ReservationAutoCompletionService {
     private final MailService mailService;
 
     /**
-     * Main scheduled task - runs every 5 minutes
+     * Main scheduled task - runs every 15 minutes
      * Checks for PAID reservations that have ended and marks them as COMPLETED
      * This is the PRIMARY mechanism for automatic completion
      */

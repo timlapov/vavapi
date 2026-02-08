@@ -87,7 +87,7 @@ public class ReservationService {
         mailService.sendNewReservationRequest(station.getLocation().getOwner(), saved);
 
         // 9. Send confirmation to client that request was received
-        //mailService.sendReservationRequestReceived(client, saved); //TODO Disabled due to mailtrap limits
+        mailService.sendReservationRequestReceived(client, saved);
 
         return reservationMapper.map(saved);
     }

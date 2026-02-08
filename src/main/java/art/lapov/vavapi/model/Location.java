@@ -7,6 +7,7 @@ import jakarta.persistence.EntityListeners;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Index;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
@@ -34,7 +35,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @EntityListeners(AuditingEntityListener.class)
-@Table(name = "location")
+@Table(name = "location", indexes = @Index(name = "idx_location_lat_lng", columnList = "latitude, longitude"))
 public class Location implements BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
