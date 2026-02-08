@@ -55,8 +55,8 @@ class PricingIntervalServiceTest {
                 2000 // 20€
         );
 
-        LocalDateTime start = LocalDateTime.of(2026, 1, 15, 10, 0);
-        LocalDateTime end = LocalDateTime.of(2026, 1, 15, 14, 0); // 4 часа
+        LocalDateTime start = LocalDateTime.of(2026, 6, 15, 10, 0);
+        LocalDateTime end = LocalDateTime.of(2026, 6, 15, 14, 0); // 4 часа
 
         when(stationRepository.findById(stationId)).thenReturn(Optional.of(station));
         when(pricingIntervalRepository.findByStationIdOrderByStartHour(stationId))
@@ -84,8 +84,8 @@ class PricingIntervalServiceTest {
                 2500
         );
 
-        LocalDateTime start = LocalDateTime.of(2026, 1, 15, 10, 0);
-        LocalDateTime end = LocalDateTime.of(2026, 1, 15, 16, 0); // 6 часов
+        LocalDateTime start = LocalDateTime.of(2026, 6, 15, 10, 0);
+        LocalDateTime end = LocalDateTime.of(2026, 6, 15, 16, 0); // 6 часов
 
         when(stationRepository.findById(stationId)).thenReturn(Optional.of(station));
         when(pricingIntervalRepository.findByStationIdOrderByStartHour(stationId))
@@ -109,8 +109,8 @@ class PricingIntervalServiceTest {
                 2000
         );
 
-        LocalDateTime start = LocalDateTime.of(2026, 1, 15, 22, 0);
-        LocalDateTime end = LocalDateTime.of(2026, 1, 16, 2, 0); // 4 hours after midnight
+        LocalDateTime start = LocalDateTime.of(2026, 6, 15, 22, 0);
+        LocalDateTime end = LocalDateTime.of(2026, 6, 16, 2, 0); // 4 hours after midnight
 
         when(stationRepository.findById(stationId)).thenReturn(Optional.of(station));
         when(pricingIntervalRepository.findByStationIdOrderByStartHour(stationId))
@@ -133,8 +133,8 @@ class PricingIntervalServiceTest {
                 1000
         );
 
-        LocalDateTime start = LocalDateTime.of(2026, 1, 15, 10, 0);
-        LocalDateTime end = LocalDateTime.of(2026, 1, 17, 18, 0); // 2 days and 8 hours
+        LocalDateTime start = LocalDateTime.of(2026, 6, 15, 10, 0);
+        LocalDateTime end = LocalDateTime.of(2026, 6, 17, 18, 0); // 2 days and 8 hours
 
         when(stationRepository.findById(stationId)).thenReturn(Optional.of(station));
         when(pricingIntervalRepository.findByStationIdOrderByStartHour(stationId))
@@ -160,8 +160,8 @@ class PricingIntervalServiceTest {
         );
 
         // Reservation from 08:00 to 20:00.
-        LocalDateTime start = LocalDateTime.of(2026, 1, 15, 8, 0);
-        LocalDateTime end = LocalDateTime.of(2026, 1, 15, 20, 0);
+        LocalDateTime start = LocalDateTime.of(2026, 6, 15, 8, 0);
+        LocalDateTime end = LocalDateTime.of(2026, 6, 15, 20, 0);
 
         when(stationRepository.findById(stationId)).thenReturn(Optional.of(station));
         when(pricingIntervalRepository.findByStationIdOrderByStartHour(stationId))
@@ -178,8 +178,8 @@ class PricingIntervalServiceTest {
     @Test
     void calculateCost_NoIntervals_ThrowsException() {
         // Given
-        LocalDateTime start = LocalDateTime.of(2026, 1, 15, 10, 0);
-        LocalDateTime end = LocalDateTime.of(2026, 1, 15, 12, 0);
+        LocalDateTime start = LocalDateTime.of(2026, 6, 15, 10, 0);
+        LocalDateTime end = LocalDateTime.of(2026, 6, 15, 12, 0);
 
         when(stationRepository.findById(stationId)).thenReturn(Optional.of(station));
         when(pricingIntervalRepository.findByStationIdOrderByStartHour(stationId))
@@ -194,8 +194,8 @@ class PricingIntervalServiceTest {
     @Test
     void calculateCost_InvalidDates_ThrowsException() {
         // Given: end date earlier than start date
-        LocalDateTime start = LocalDateTime.of(2026, 1, 15, 14, 0);
-        LocalDateTime end = LocalDateTime.of(2026, 1, 15, 10, 0);
+        LocalDateTime start = LocalDateTime.of(2026, 6, 15, 14, 0);
+        LocalDateTime end = LocalDateTime.of(2026, 6, 15, 10, 0);
 
         when(stationRepository.findById(stationId)).thenReturn(Optional.of(station));
 
@@ -214,8 +214,8 @@ class PricingIntervalServiceTest {
                 1000 // 10€/h
         );
 
-        LocalDateTime start = LocalDateTime.of(2026, 1, 15, 10, 0);
-        LocalDateTime end = LocalDateTime.of(2026, 1, 15, 12, 30);
+        LocalDateTime start = LocalDateTime.of(2026, 6, 15, 10, 0);
+        LocalDateTime end = LocalDateTime.of(2026, 6, 15, 12, 30);
 
         when(stationRepository.findById(stationId)).thenReturn(Optional.of(station));
         when(pricingIntervalRepository.findByStationIdOrderByStartHour(stationId))
@@ -232,8 +232,8 @@ class PricingIntervalServiceTest {
     @Test
     void calculateCost_StationNotFound_ThrowsException() {
         // Given
-        LocalDateTime start = LocalDateTime.of(2026, 1, 15, 10, 0);
-        LocalDateTime end = LocalDateTime.of(2026, 1, 15, 12, 0);
+        LocalDateTime start = LocalDateTime.of(2026, 6, 15, 10, 0);
+        LocalDateTime end = LocalDateTime.of(2026, 6, 15, 12, 0);
 
         when(stationRepository.findById(stationId)).thenReturn(Optional.empty());
 

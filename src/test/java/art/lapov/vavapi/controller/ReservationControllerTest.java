@@ -474,8 +474,8 @@ class ReservationControllerTest {
     @WithMockUser
     void createReservation_CrossesMidnight_Success_CorrectTotalCost() throws Exception {
         // Given: 22:00 → 02:00
-        LocalDateTime start = LocalDateTime.of(2026, 1, 15, 22, 0);
-        LocalDateTime end   = LocalDateTime.of(2026, 1, 16, 2, 0);
+        LocalDateTime start = LocalDateTime.of(2026, 6, 15, 22, 0);
+        LocalDateTime end   = LocalDateTime.of(2026, 6, 16, 2, 0);
 
         // Допустим, тарифы дают суммарно 10€ = 1000 центов
         ReservationDTO midnightDTO = new ReservationDTO(
